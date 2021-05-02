@@ -1,0 +1,35 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #202020;
+  color: white;
+  font-family: 'Inter', 'Verdana', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app__section {
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .app__section {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .app__section {
+    padding: 0 70px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .app__section {
+    padding: 0 calc(50% - 570px);
+  }
+}

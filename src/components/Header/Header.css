@@ -1,0 +1,108 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: #202020;
+}
+
+.app__section.header {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.header_theme_blue {
+  background-color: #073042;
+}
+
+.header__logo {
+  width: 36px;
+  height: 36px;
+  margin-right: auto;
+}
+
+.header__nav {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 0 14px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.header__nav-item {
+  color: white;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.button.header__button {
+  color: black;
+  background-color: #3ddc84;
+  font-style: normal;
+  font-weight: 500;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 12px;
+}
+
+.header__overlay {
+  opacity: 0;
+  transition: opacity .5s;
+}
+
+.menu-toggle:checked~.header__overlay {
+  content: '';
+  background-color: black;
+  opacity: .3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.menu-toggle~* .header__nav {
+  visibility: hidden;
+  background-color: #202020;
+  max-width: 0;
+  transition: max-width .3s ease-out;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.menu-toggle:checked~* .header__nav {
+  visibility: visible;
+  grid-auto-flow: row;
+  gap: 28px 0;
+  justify-items: center;
+  width: 100%;
+  max-width: 520px;
+  z-index: 1;
+}
+
+@media screen and (min-width: 768px) {
+  .header__nav {
+    font-size: 12px;
+    line-height: 1.33;
+  }
+  .button.header__button {
+    padding: 8px 20px;
+  }
+  .menu-toggle:checked~.header__overlay {
+    opacity: 0;
+    position: static;
+  }
+  .menu-toggle~* .header__nav {
+    visibility: visible;
+    max-width: 100%;
+    transition: none;
+    position: static;
+  }
+  .menu-toggle:checked~* .header__nav {
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 0 14px;
+  }
+}
