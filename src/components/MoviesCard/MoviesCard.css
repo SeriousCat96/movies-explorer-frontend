@@ -1,0 +1,109 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  background-color: #2f2f2f;
+}
+
+.card__image {
+  width: 100%;
+  min-height: 168px;
+}
+
+.card__info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 14px 12px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.card__title {
+  margin: 0 0 8px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.card__save-btn {
+  width: 14px;
+  height: 12px;
+  border: none;
+  background: url(../../images/save.svg) center / cover no-repeat;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.card__save-btn_checked {
+  background-image: url(../../images/save-checked.svg);
+}
+
+.card__text {
+  margin: 0;
+  font-style: normal;
+  font-weight: normal;
+  color: #8b8b8b;
+  font-size: 11px;
+  line-height: 1.18;
+}
+
+@media screen and (min-width: 768px) {
+  .card {
+    padding: 6px;
+    flex-direction: row-reverse;
+    justify-content: stretch;
+  }
+  .card__info {
+    padding: 16px 16px;
+    position: relative;
+  }
+  .card__image {
+    width: 220px;
+    min-height: auto;
+    height: 122px;
+  }
+  .card__save-btn {
+    position: static;
+    order: 1;
+  }
+  .card__title {
+    margin: 0 0 13px;
+    font-size: 18px;
+    line-height: 1.22;
+  }
+  .card__text {
+    margin: 0 0 30px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .card {
+    padding: 6px;
+    flex-direction: row-reverse;
+    justify-content: stretch;
+  }
+  .card__info {
+    padding: 16px 16px;
+    position: relative;
+  }
+  .card__image {
+    width: 220px;
+    min-height: auto;
+    height: 122px;
+  }
+  .card__save-btn {
+    position: static;
+    order: 1;
+  }
+  .card__title {
+    margin: 0 0 13px;
+    font-size: 18px;
+    line-height: 1.22;
+  }
+  .card__text {
+    margin: 0 0 30px;
+  }
+}

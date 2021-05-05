@@ -1,10 +1,11 @@
-import { Link } from '../Link/Link';
+import { Link } from '../Link/Link.jsx';
+import cx from 'classnames';
 import logo from '../../images/promo.svg'
 import './Promo.css';
 
-function Promo({onClick}) {
+function Promo() {
   return (
-    <section className="promo app__section">
+    <section className={cx('promo', 'app__section')}>
       <img className="promo__logo" src={logo} alt="Логотип промо"/>
       <h1 className="promo__title">
         Учебный проект студента фаультета Веб-разработки.

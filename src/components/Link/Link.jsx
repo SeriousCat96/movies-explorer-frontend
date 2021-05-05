@@ -1,5 +1,6 @@
 import { Link as RouterLink, NavLink as RouterNavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import './Link.css';
 
 const isCrossDomainLink = (link) => {
@@ -9,19 +10,21 @@ const isCrossDomainLink = (link) => {
   }
 }
 
-export const Link = ({ activeStyled, className, to, target, rel, children, ...props }) => {
+export const Link = ({ activeClassName, className, to, target, rel, children, ...props }) => {
+  const classNames = cx('link', className);
+
   return (
     isCrossDomainLink(to) ? (
-      <a href={to} className={`link${className && ` ${className}`}`} target={target} rel={rel}>
+      <a href={to} className={classNames} target={target} rel={rel}>
         {children}
       </a>
     ) : (
-      activeStyled ? (
-        <RouterNavLink to={to} className={`link${className && ` ${className}`}`} {...props}>
+      activeClassName ? (
+        <RouterNavLink to={to} className={classNames} activeClassName={activeClassName} {...props}>
           {children}
         </RouterNavLink>
       ) : (
-        <RouterLink to={to} className={`link${className && ` ${className}`}`} {...props}>
+        <RouterLink to={to} className={classNames} {...props}>
           {children}
         </RouterLink>
       )
@@ -30,13 +33,12 @@ export const Link = ({ activeStyled, className, to, target, rel, children, ...pr
 }
 
 Link.defaultProps = {
-  activeStyled: false,
   to: window.location.pathname,
   target: '_blank',
   rel: "noreferrer"
 }
 Link.propTypes = {
-  activeStyled: PropTypes.bool,
+  activeClassName: PropTypes.string,
   to: PropTypes.string.isRequired,
   target: PropTypes.string,
   rel: PropTypes.string,
@@ -44,6 +46,7 @@ Link.propTypes = {
   children: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
+    PropTypes.element,
   ]).isRequired
 }
 

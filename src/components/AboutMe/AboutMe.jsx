@@ -1,7 +1,7 @@
 import React from 'react';
 import photo from '../../images/photo.jpg'
-import Navigation from '../Navigation/Navigation';
-import { Link } from '../Link/Link';
+import Navigation from '../Navigation/Navigation.jsx';
+import { Link } from '../Link/Link.jsx';
 import './AboutMe.css';
 
 function AboutMe() {
@@ -19,7 +19,7 @@ function AboutMe() {
           После прохождения курса по веб-разработке переквалифицировался как Fullstack-разработчик.
         </p>
 
-        <Navigation className="about-me__nav">
+        <Navigation itemsClassName="about-me__nav">
           <Link to="https://vk.com/serious_cat" className="about-me__link">ВКонтакте</Link>
           <Link to="https://github.com/SeriousCat96" className="about-me__link">Github</Link>
         </Navigation>

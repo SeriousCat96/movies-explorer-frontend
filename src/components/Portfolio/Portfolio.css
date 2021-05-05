@@ -19,9 +19,13 @@
 }
 
 .portfolio__nav {
+  width: 100%;
+}
+
+.portfolio__links {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  width: 100%;
 }
 
 .portfolio__link {
@@ -36,7 +40,7 @@
   padding: 19px 0;
 }
 
-.portfolio__nav li:not(:last-child) .portfolio__link::after {
+.portfolio__links *:not(:last-child) .portfolio__link::after {
   content: '';
   position: absolute;
   left: 0;
@@ -77,7 +81,7 @@
     font-size: 30px;
     line-height: 1.67;
   }
-  .portfolio__nav li:not(:last-child) .portfolio__link::after {
+  .portfolio__links *:not(:last-child) .portfolio__link::after {
     border-bottom-color: #424242;
   }
   .portfolio__link-image {

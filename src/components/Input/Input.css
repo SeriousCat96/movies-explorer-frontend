@@ -1,0 +1,12 @@
+.input {
+  width: 100%;
+  font-style: normal;
+  font-weight: normal;
+  color: white;
+  box-sizing: border-box;
+  border: none;
+}
+
+.input:active, .input:focus {
+  outline: none;
+}
