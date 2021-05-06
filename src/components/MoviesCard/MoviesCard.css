@@ -27,17 +27,25 @@
   line-height: 1.25;
 }
 
-.card__save-btn {
+.card__button {
   width: 14px;
   height: 12px;
   border: none;
-  background: url(../../images/save.svg) center / cover no-repeat;
   position: absolute;
   top: 16px;
   right: 16px;
+  background: center / cover no-repeat;
 }
 
-.card__save-btn_checked {
+.card__button_type_unchecked-like {
+  background-image: url(../../images/save.svg);
+}
+
+.card__button_type_remove {
+  background-image: url(../../images/remove-icon.svg);
+}
+
+.card__button_type_checked-like {
   background-image: url(../../images/save-checked.svg);
 }
 
@@ -65,7 +73,7 @@
     min-height: auto;
     height: 122px;
   }
-  .card__save-btn {
+  .card__button {
     position: static;
     order: 1;
   }
@@ -94,7 +102,7 @@
     min-height: auto;
     height: 122px;
   }
-  .card__save-btn {
+  .card__button {
     position: static;
     order: 1;
   }

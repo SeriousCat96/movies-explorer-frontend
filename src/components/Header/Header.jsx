@@ -1,8 +1,10 @@
-import { Switch, Route } from 'react-router-dom';
+import React from 'react';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Link from '../Link/Link.jsx';
 import Button from '../Button/Button.jsx';
 import Navigation from '../Navigation/Navigation.jsx';
 import MenuToggle from '../MenuToggle/MenuToggle.jsx';
+import cx from 'classnames';
 import logo from '../../images/logo.svg';
 import accountImg from '../../images/account.svg';
 import './Header.css';
@@ -16,36 +18,36 @@ const Account = () => {
   )
 }
 
-const Header = ({ className = "header" }) => {
+const Header = () => {
   return (
-    <header className={className}>
-      <img className="header__logo" src={logo} alt="Лого"/>
+    <header className={cx('header', { 'header_theme_blue': useRouteMatch({ path: '/', exact: true }) }, 'app__section')}>
+      <Link to="/" className="header__link"><img className="header__logo" src={logo} alt="Лого"/></Link>
       <Switch>
         <Route exact path="/">
           <Navigation className="header__nav" itemsClassName="header__nav-items">
-            <Link to="/signup" className="header__nav-item">
+            <Link to="/signup" className="header__link">
               Регистрация
             </Link>
-            <Link to="/signin" className="header__nav-item">
+            <Link to="/signin" className="header__link">
               <Button className="header__button">
                 Войти
               </Button>
             </Link>
           </Navigation>
         </Route>
-        <Route exact path="/movies">
+        <Route exact path="/(movies|saved-movies|profile)">
           <MenuToggle id="menu" />
           <Navigation className="header__nav" itemsClassName="header__nav-items">
-            <Link exact to="/" className="header__nav-item" activeClassName="header__nav-item_active">
+            <Link exact to="/" className="header__link" activeClassName="header__nav-item_active">
               Главная
             </Link>
-            <Link to="/movies" className="header__nav-item" activeClassName="header__nav-item_active">
+            <Link to="/movies" className="header__link" activeClassName="header__nav-item_active">
               Фильмы
             </Link>
-            <Link to="/saved-movies" className="header__nav-item" activeClassName="header__nav-item_active">
+            <Link to="/saved-movies" className="header__link" activeClassName="header__nav-item_active">
               Сохранённые фильмы
             </Link>
-            <Link to="/profile" className="header__nav-item" activeClassName="header__nav-item_active">
+            <Link to="/profile" className="header__link" activeClassName="header__nav-item_active">
               <Account />
             </Link>
           </Navigation>
@@ -56,4 +58,4 @@ const Header = ({ className = "header" }) => {
   );
 }
 
-export default Header;
+export default React.memo(Header);

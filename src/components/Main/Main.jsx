@@ -1,19 +1,9 @@
-import { Route, Switch } from 'react-router';
-import About from '../About/About.jsx';
-import Movies from '../Movies/Movies.jsx';
 import './Main.css'
 
-const Main = () => {
+const Main = ({children}) => {
   return (
     <main className="main">
-      <Switch>
-        <Route exact path="/">
-          <About />
-        </Route>
-        <Route exact path="/movies">
-          <Movies />
-        </Route>
-      </Switch>
+      {children}
     </main>
   );
 }

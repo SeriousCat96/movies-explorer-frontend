@@ -15,7 +15,6 @@
 .header__logo {
   width: 36px;
   height: 36px;
-  margin-right: auto;
 }
 
 .header__nav-items {
@@ -26,7 +25,7 @@
   align-items: baseline;
 }
 
-.header__nav-item {
+.header__link {
   display: flex;
   align-items: center;
   color: white;
@@ -35,6 +34,14 @@
   font-size: 10px;
   line-height: 1.6;
   box-sizing: border-box;
+}
+
+.header > .header__link {
+  margin-right: auto;
+}
+
+.header > .header__link:hover {
+  opacity: 1;
 }
 
 .button.header__button {
@@ -66,7 +73,7 @@
   content: '';
   background-color: black;
   opacity: .3;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   right: 0;
@@ -79,7 +86,7 @@
   max-width: 0;
   transition: max-width .3s ease-out;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -98,7 +105,7 @@
   z-index: 1;
 }
 
-.menu-toggle~* .header__nav-items .list__item .header__nav-item * {
+.menu-toggle~* .header__nav-items .list__item .header__link * {
   display: inline-flex;
   align-items: center;
 }
@@ -108,19 +115,19 @@
   margin-bottom: 46px;
 }
 
-.menu-toggle:checked~* .header__nav-items .header__nav-item {
+.menu-toggle:checked~* .header__nav-items .header__link {
   padding: 12px 0;
   font-size: 18px;
   line-height: 1.22;
 }
 
-.menu-toggle:checked~* .header__nav-items .list__item:last-child .header__nav-item {
+.menu-toggle:checked~* .header__nav-items .list__item:last-child .header__link {
   padding: 0;
   font-size: 13px;
   line-height: .92;
 }
 
-.menu-toggle:checked~* .header__nav-items .header__nav-item.header__nav-item_active {
+.menu-toggle:checked~* .header__nav-items .header__link.header__nav-item_active {
   border-bottom: 2px solid white;
   padding-bottom: 10px;
 }
@@ -133,10 +140,10 @@
     padding-top: 159px;
     gap: 16px;
   }
-  .menu-toggle:checked~* .header__nav-items .header__nav-item {
+  .menu-toggle:checked~* .header__nav-items .header__link {
     padding: 6px 0;
   }
-  .menu-toggle:checked~* .header__nav-items .header__nav-item.header__nav-item_active {
+  .menu-toggle:checked~* .header__nav-items .header__link.header__nav-item_active {
     padding-bottom: 4px;
   }
   .menu-toggle~* .header__nav-items .list__item:last-child:not(:first-child) {
@@ -148,7 +155,7 @@
   .app__section.header {
     padding: 18px 70px;
   }
-  .header__nav-item {
+  .header__link {
     font-size: 12px;
     line-height: 1.33;
   }
@@ -175,7 +182,7 @@
     transition: none;
     position: static;
   }
-  .menu-toggle~* .header__nav-items .header__nav-item {
+  .menu-toggle~* .header__nav-items .header__link {
     font-weight: normal;
     font-size: 12px;
     line-height: 1.33;
@@ -189,20 +196,20 @@
   .menu-toggle~* .header__nav-items .list__item:first-child:not(:last-child) {
     display: none;
   }
-  .menu-toggle~* .header__nav-items .list__item:last-child:not(:first-child) .header__nav-item {
+  .menu-toggle~* .header__nav-items .list__item:last-child:not(:first-child) .header__link {
     margin: 0 0 0 auto;
   }
-  .menu-toggle~* .header__nav-items .header__nav-item.header__nav-item_active {
+  .menu-toggle~* .header__nav-items .header__link.header__nav-item_active {
     font-weight: 500;
     border-bottom: none;
     padding: 0;
   }
-  .menu-toggle:checked~* .header__nav-items .header__nav-item.header__nav-item_active {
+  .menu-toggle:checked~* .header__nav-items .header__link.header__nav-item_active {
     font-weight: 500;
     border-bottom: none;
     padding: 0;
   }
-  .menu-toggle:checked~* .header__nav-items .header__nav-item {
+  .menu-toggle:checked~* .header__nav-items .header__link {
     font-weight: normal;
     font-size: 12px;
     line-height: 1.33;

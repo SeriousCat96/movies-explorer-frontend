@@ -11,7 +11,7 @@ function SearchForm() {
       name: 'movie',
       type: 'text',
       placeholder: 'Фильм',
-      required: false,
+      required: true,
       className: 'search__input',
       labelClassName: 'search__label',
     },

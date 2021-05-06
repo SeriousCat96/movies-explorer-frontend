@@ -1,9 +1,9 @@
 import React from 'react';
-import { useLocation, useRouteMatch } from 'react-router';
-import Header from '../Header/Header.jsx';
-import Main from '../Main/Main.jsx';
-import Footer from '../Footer/Footer.jsx';
-import cx from 'classnames';
+import About from '../About/About.jsx';
+import Movies from '../Movies/Movies.jsx';
+import SavedMovies from '../SavedMovies/SavedMovies.jsx';
+import NotFound from '../NotFound/NotFound.jsx';
+import { Route, Switch, useLocation } from 'react-router';
 import './App.css';
 
 function App() {
@@ -24,11 +24,20 @@ function App() {
   );
 
   return (
-    <div className="app">
-      <Header className={cx('header',  { 'header_theme_blue' : useRouteMatch({ path: '/', exact: true })}, 'app__section')} />
-      <Main />
-      <Footer />
-    </div>
+    <>
+      <Switch>
+        <Route exact path="/">
+          <About />
+        </Route>
+        <Route exact path="/movies">
+          <Movies />
+        </Route>
+        <Route exact path="/saved-movies">
+          <SavedMovies />
+        </Route>
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 

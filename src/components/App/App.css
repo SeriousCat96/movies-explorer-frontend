@@ -4,11 +4,17 @@
   align-items: stretch;
   min-width: 320px;
   min-height: 100vh;
+  height: 100%;
   background-color: #202020;
   color: white;
   font-family: 'Inter', 'Verdana', sans-serif;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  flex: 1
 }
 
 .app__section {
