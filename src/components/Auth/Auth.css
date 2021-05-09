@@ -68,7 +68,7 @@
 .auth__text {
   margin: 0;
   font-style: normal;
-  font-weight: 500;
+  font-weight: normal;
   font-size: 12px;
   line-height: 1.25;
   color: #8b8b8b;
@@ -84,6 +84,10 @@
   width: 36px;
   height: 36px;
   margin-bottom: 50px;
+}
+
+.auth > .auth__link:first-child:hover {
+  opacity: 1;
 }
 
 @media screen and (min-width: 768px) {

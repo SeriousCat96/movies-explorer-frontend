@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './AboutSection.css';
 
-function AboutSection({ children, title, id }) {
+function AboutSection({ children, title, id, name }) {
   return (
-    <section className={cx('about', 'app__section')} id={id}>
+    <section className={cx('about', 'app__section')} id={id} name={name}>
       <h2 className="about__title">{title}</h2>
       {children}
     </section>

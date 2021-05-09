@@ -1,4 +1,4 @@
-import { Link } from '../Link/Link.jsx';
+import Link from '../Link/Link';
 import cx from 'classnames';
 import logo from '../../images/promo.svg'
 import './Promo.css';
@@ -13,7 +13,7 @@ function Promo() {
       <p className="promo__subtitle">
         Листайте ниже, чтобы узнать больше про этот проект и его создателя.
       </p>
-      <Link to="#about" className="promo__link">
+      <Link to="aboutProject" className="promo__link" duration={700} smooth>
         Узнать больше
       </Link>
     </section>

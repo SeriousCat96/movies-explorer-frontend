@@ -14,13 +14,13 @@ const About = () => {
       <Header/>
       <Main>
         <Promo />
-        <AboutSection title="О проекте" id="about">
+        <AboutSection title="О проекте" id="about" name="aboutProject">
           <AboutProject />
         </AboutSection>
-        <AboutSection title="Технологии" id="techs">
+        <AboutSection title="Технологии" id="techs" name="aboutTechs">
           <Techs />
         </AboutSection>
-        <AboutSection title="Студент" id="student">
+        <AboutSection title="Студент" id="student" name="aboutStudent">
           <AboutMe />
         </AboutSection>
         <Portfolio />

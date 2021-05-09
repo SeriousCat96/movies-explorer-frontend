@@ -1,32 +1,36 @@
+import { urlRegex } from '../../utils/regex';
 import { Link as RouterLink, NavLink as RouterNavLink } from 'react-router-dom';
+import { Link as ScrollLink } from 'react-scroll';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './Link.css';
 
-const isCrossDomainLink = (link) => {
-  if (link.startsWith('http')) {
-    const url = link instanceof URL ? link : new URL(link);
-    return url.hostname !== window.location.hostname;
-  }
-}
+const isURL = (link) => urlRegex.test(link);
+const isRoute = (link) => link.startsWith('/');
 
-export const Link = ({ activeClassName, className, to, target, rel, children, ...props }) => {
+export const Link = ({ activeClassName, className, to, href, target, rel, children, ...props }) => {
   const classNames = cx('link', className);
 
   return (
-    isCrossDomainLink(to) ? (
+    isURL(to) ? (
       <a href={to} className={classNames} target={target} rel={rel}>
-        {children}
+          {children}
       </a>
     ) : (
-      activeClassName ? (
-        <RouterNavLink to={to} className={classNames} activeClassName={activeClassName} {...props}>
-          {children}
-        </RouterNavLink>
+      isRoute(to) ? (
+        activeClassName ? (
+          <RouterNavLink to={to} className={classNames} activeClassName={activeClassName} {...props}>
+            {children}
+          </RouterNavLink>
+        ) : (
+          <RouterLink to={to} className={classNames} {...props}>
+            {children}
+          </RouterLink>
+        )
       ) : (
-        <RouterLink to={to} className={classNames} {...props}>
+        <ScrollLink to={to} className={classNames} href={href} {...props}>
           {children}
-        </RouterLink>
+        </ScrollLink>
       )
     )
   );
@@ -34,12 +38,14 @@ export const Link = ({ activeClassName, className, to, target, rel, children, ..
 
 Link.defaultProps = {
   to: window.location.pathname,
+  href: window.location.pathname,
   target: '_blank',
   rel: "noreferrer"
 }
 Link.propTypes = {
   activeClassName: PropTypes.string,
   to: PropTypes.string.isRequired,
+  href: PropTypes.string,
   target: PropTypes.string,
   rel: PropTypes.string,
   className: PropTypes.string,
