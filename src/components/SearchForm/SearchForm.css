@@ -39,8 +39,6 @@
 .search__input {
   height: 100%;
   padding: 13px;
-  background: #2F2F2F;
-  border-radius: 8px;
 }
 
 .search__toggle {

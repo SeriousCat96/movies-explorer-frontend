@@ -1,0 +1,12 @@
+.input-error {
+  display: none;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  color: #ee3465;
+}
+
+.input-error_active {
+  display: inline;
+}

@@ -5,7 +5,7 @@ import './Promo.css';
 
 function Promo() {
   return (
-    <section className={cx('promo', 'app__section')}>
+    <section className={cx('promo', 'app__section', 'app__section_theme_dark-blue')}>
       <img className="promo__logo" src={logo} alt="Логотип промо"/>
       <h1 className="promo__title">
         Учебный проект студента фаультета Веб-разработки.

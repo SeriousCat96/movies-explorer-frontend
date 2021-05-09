@@ -20,7 +20,7 @@ const Account = () => {
 
 const Header = () => {
   return (
-    <header className={cx('header', { 'header_theme_blue': useRouteMatch({ path: '/', exact: true }) }, 'app__section')}>
+    <header className={cx('header', 'app__section', { 'app__section_theme_dark-blue': useRouteMatch({ path: '/', exact: true }) })}>
       <Link to="/" className="header__link"><img className="header__logo" src={logo} alt="Лого"/></Link>
       <Switch>
         <Route exact path="/">

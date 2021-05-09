@@ -13,11 +13,13 @@ function Input({
   checked,
   defaultChecked,
   children,
+  labelText,
   ...props
 }) {
   return (
     <>
       <Label className={labelClassName} htmlFor={id}>
+        {labelText}
         <input
           className={cx('input', className)}
           id={id}
@@ -48,6 +50,7 @@ Input.propTypes = {
   type: PropTypes.string.isRequired,
   className: PropTypes.string,
   labelClassName: PropTypes.string,
+  labelText: PropTypes.string,
   placeholder: PropTypes.string,
   minLength: PropTypes.number,
   maxLength: PropTypes.number,
