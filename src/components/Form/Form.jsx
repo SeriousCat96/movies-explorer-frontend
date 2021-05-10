@@ -3,6 +3,7 @@ import cx from 'classnames';
 import useFormValidation from '../../hooks/useFormValidation';
 import useFormDefaultValues from '../../hooks/useFormDefaultValues';
 import PropTypes from 'prop-types';
+import Fieldset from '../Fieldset/Fieldset.jsx';
 import Button from '../Button/Button.jsx';
 import Input from '../Input/Input';
 import ValidableInput from '../ValidableInput/ValidableInput';
@@ -64,7 +65,7 @@ function Form({
     >
       {inputs.map(
         (input) => (
-          <fieldset key={input.id} className={cx('input__fieldset', fieldsetClassName)}>
+          <Fieldset key={input.id} className={fieldsetClassName}>
             <FormInput
               {...input}
               value={values[input.name] || ''}
@@ -73,7 +74,7 @@ function Form({
               onChange={handleChange}
               useValidation={useValidation}
             />
-          </fieldset>
+          </Fieldset>
         )
       )}
       <Button

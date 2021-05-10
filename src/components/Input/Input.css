@@ -10,12 +10,6 @@
   border-radius: 8px;
 }
 
-.input__fieldset {
-  margin: 0;
-  padding: 0;
-  border: none;
-}
-
 .input.input__error {
   color: #ee3465;
   margin-bottom: 10px;
