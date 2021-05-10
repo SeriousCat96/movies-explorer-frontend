@@ -28,8 +28,8 @@ function Input({
           defaultChecked={defaultChecked || checked}
           {...props}
         />
-        {children}
       </Label>
+      {children}
     </>
   );
 }

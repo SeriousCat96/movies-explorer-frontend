@@ -1,4 +1,3 @@
-import React from 'react';
 import Navigation from '../Navigation/Navigation.jsx';
 import Link from '../Link/Link.jsx';
 import cx from 'classnames';
@@ -20,4 +19,4 @@ const Footer = () => {
   );
 }
 
-export default React.memo(Footer);
+export default Footer;

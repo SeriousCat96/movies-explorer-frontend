@@ -1,4 +1,3 @@
-import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Link from '../Link/Link.jsx';
 import Button from '../Button/Button.jsx';
@@ -58,4 +57,4 @@ const Header = () => {
   );
 }
 
-export default React.memo(Header);
+export default Header;

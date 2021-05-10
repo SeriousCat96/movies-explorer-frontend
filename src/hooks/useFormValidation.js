@@ -1,11 +1,9 @@
 import React from 'react';
-import useFormDefaultValues from './useFormDefaultValues';
 
-export default function useFormValidation(inputs = [], resetTrigger = undefined) {
+export default function useFormValidation() {
   const [values, setValues] = React.useState({});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
-  const defaults = useFormDefaultValues(inputs);
 
   const handleChange = (evt) => {
     const name = evt.target.name;
@@ -15,20 +13,19 @@ export default function useFormValidation(inputs = [], resetTrigger = undefined)
     setErrors({ ...errors, [name]: evt.target.validationMessage });
     setIsValid(evt
       .target
-      .closest('.form')
+      .closest('form')
       .checkValidity());
   }
 
   const handeResetValidation = React.useCallback(
-    (form) => {
-      setValues({...defaults});
+    (form, values={}) => {
+      setValues(values);
       setErrors({});
       setIsValid(form ? form.checkValidity() : false);
     },
-    [setValues, setErrors, setIsValid, defaults]);
+    [setValues, setErrors, setIsValid]);
 
   return {
-    defaults,
     values,
     errors,
     isValid,

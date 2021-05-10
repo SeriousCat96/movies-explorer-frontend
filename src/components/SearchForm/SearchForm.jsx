@@ -33,6 +33,7 @@ function SearchForm() {
         name="search"
         className="search__form"
         submitClassName="search__submit"
+        fieldsetClassName="search__fieldset"
         inputs={inputs}
         useValidation
       />

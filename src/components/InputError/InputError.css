@@ -5,6 +5,7 @@
   font-size: 10px;
   line-height: 12px;
   color: #ee3465;
+  overflow: hidden;
 }
 
 .input-error_active {

@@ -1,11 +1,12 @@
 import React from 'react';
 import cx from 'classnames';
 import useFormValidation from '../../hooks/useFormValidation';
+import useFormDefaultValues from '../../hooks/useFormDefaultValues';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button.jsx';
-import './Form.css';
 import Input from '../Input/Input';
 import ValidableInput from '../ValidableInput/ValidableInput';
+import './Form.css';
 
 const FormInput = ({ component: Component, useValidation, ...props }) => (
   Component ? (
@@ -19,6 +20,7 @@ function Form({
   name,
   inputs,
   className,
+  fieldsetClassName,
   submitClassName,
   submitTitle,
   onSubmit,
@@ -35,20 +37,21 @@ function Form({
     isValid,
     handleChange,
     handeResetValidation
-  } = useFormValidation(inputs);
+  } = useFormValidation();
 
   const formRef = React.useRef();
+  const defaults = useFormDefaultValues(inputs);
 
   React.useEffect(
     () => {
       if (useValidation) {
         const form = formRef.current;
-        handeResetValidation(form);
+        handeResetValidation(form, defaults);
 
-        return () => handeResetValidation(form);
+        return () => handeResetValidation(form, defaults);
       }
     },
-    [handeResetValidation, formRef, useValidation]
+    [handeResetValidation, formRef, defaults, useValidation]
   );
 
   return (
@@ -61,15 +64,16 @@ function Form({
     >
       {inputs.map(
         (input) => (
-          <FormInput
-            key={input.id}
-            value={values[input.name] || ''}
-            error={errors[input.name]}
-            isInvalid={errors[input.name] !== undefined && errors[input.name] !== ''}
-            onChange={handleChange}
-            useValidation={useValidation}
-            {...input}
-          />
+          <fieldset key={input.id} className={cx('input__fieldset', fieldsetClassName)}>
+            <FormInput
+              {...input}
+              value={values[input.name] || ''}
+              error={errors[input.name]}
+              isInvalid={errors[input.name] !== undefined && errors[input.name] !== ''}
+              onChange={handleChange}
+              useValidation={useValidation}
+            />
+          </fieldset>
         )
       )}
       <Button
@@ -102,6 +106,7 @@ Form.propTypes = {
   })),
   className: PropTypes.string,
   submitClassName: PropTypes.string,
+  fieldsetClassName: PropTypes.string,
   submitTitle: PropTypes.string,
   useValidation: PropTypes.bool,
 };
