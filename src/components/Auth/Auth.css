@@ -4,6 +4,7 @@
   justify-content: stretch;
   align-items: center;
   height: 100vh;
+  flex: 1;
 }
 
 .app__section.auth {
@@ -93,6 +94,7 @@
 @media screen and (min-width: 768px) {
   .auth {
     height: 100%;
+    flex: 0;
     align-items: flex-start;
   }
   .auth.app__section {

@@ -4,6 +4,7 @@
   justify-content: stretch;
   align-items: center;
   height: calc(100vh - 72px);
+  flex: 1;
 }
 
 .app__section.profile {
@@ -99,6 +100,7 @@
 @media screen and (min-width: 768px) {
   .profile {
     height: 100%;
+    flex: 0;
   }
   .profile.app__section {
     padding: 0;
