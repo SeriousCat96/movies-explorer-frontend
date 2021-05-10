@@ -1,0 +1,55 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  font-style: normal;
+  font-weight: normal;
+  vertical-align: middle;
+  font-size: 11px;
+  line-height: 1.64;
+  height: 20px;
+}
+
+.toggle__slider {
+  background: #343434;
+  border-radius: 20px;
+  user-select: none;
+  cursor: pointer;
+  outline: none;
+  margin: 0;
+  width: 36px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.toogle__caption {
+  margin-left: 49px;
+}
+
+.toggle__switch {
+  display: none;
+  appearance: none;
+}
+
+.toggle__slider::before {
+  content: '';
+  display: inline-block;
+  background: #a0a0a0;
+  border: 1px solid white;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  transition: all .3s ease-in-out;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.toggle__switch:checked ~ .toggle__slider::before {
+  background: #2be080;
+  transform: translateX(100%);
+}

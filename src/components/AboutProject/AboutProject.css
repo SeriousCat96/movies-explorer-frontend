@@ -1,0 +1,141 @@
+.project {
+  display: flex;
+  flex-direction: column;
+}
+
+.project__about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 60px;
+}
+
+.project__info {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 56px;
+}
+
+.project__info:last-of-type {
+  margin: 0;
+}
+
+.project__title {
+  margin: 0 0 16px;
+  color: white;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 1.22;
+  letter-spacing: -0.04em;
+}
+
+.project__subtitle {
+  margin: 0;
+  color: white;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.project__schedule {
+  display: flex;
+  width: 100%;
+}
+
+.project__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.project__stage_type_backend {
+  width: 25%;
+}
+
+.project__stage_type_frontend {
+  width: 75%;
+}
+
+.project__deadline {
+  margin: 0 0 10px;
+  padding: 11px 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 1.18;
+  text-align: center;
+  color: white;
+  background-color: #303030;
+}
+
+.project__deadline_passed {
+  color: black;
+  background-color: #3ddc84;
+}
+
+.project__stage-name {
+  margin: 0;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 1.18;
+  text-align: center;
+  color: #a0a0a0;
+}
+
+@media screen and (min-width: 768px) {
+  .project__about {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    margin: 0 0 93px;
+  }
+  .project__info {
+    margin: 0 30px 0 0;
+  }
+  .project__title {
+    margin: 0 0 22px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .project__subtitle {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .project__deadline {
+    margin: 0 0 14px;
+    padding: 9px 0;
+    font-size: 14px;
+    line-height: 1.214;
+  }
+  .project__stage-name {
+    font-size: 14px;
+    line-height: 1.214;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .project__about {
+    margin: 0 0 110px;
+  }
+  .project__info {
+    margin: 0 40px 0 0;
+  }
+  .project__title {
+    margin: 0 0 26px;
+  }
+  .project__subtitle {
+    font-size: 14px;
+    line-height: 1.43;
+  }
+  .project__deadline {
+    font-size: 14px;
+    line-height: 1.214;
+  }
+  .project__stage-name {
+    font-size: 14px;
+    line-height: 1.214;
+  }
+}

@@ -1,0 +1,8 @@
+.label {
+  padding: 0;
+  margin: 0;
+}
+
+.label:empty {
+  display: none;
+}

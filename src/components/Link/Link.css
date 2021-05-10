@@ -1,0 +1,13 @@
+.link {
+  padding: 0;
+  text-decoration: none;
+  transition: opacity .3s ease-in-out;
+  user-select: none;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1024px) {
+  .link:hover {
+    opacity: .7;
+  }
+}

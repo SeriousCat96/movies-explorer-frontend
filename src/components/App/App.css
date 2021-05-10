@@ -1,0 +1,45 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 320px;
+  min-height: 100vh;
+  height: 100%;
+  background-color: #202020;
+  color: white;
+  font-family: 'Inter', 'Verdana', sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  flex: 1
+}
+
+.app__section {
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.app__section_theme_dark-blue {
+  background-color: #073042;
+}
+
+@media screen and (min-width: 768px) {
+  .app__section {
+    padding: 0 30px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .app__section {
+    padding: 0 70px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .app__section {
+    padding: 0 calc(50% - 570px);
+  }
+}
