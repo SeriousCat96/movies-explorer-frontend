@@ -40,24 +40,22 @@ function Form({
     handeResetValidation
   } = useFormValidation();
 
-  const formRef = React.useRef();
   const defaults = useFormDefaultValues(inputs);
 
   React.useEffect(
     () => {
       if (useValidation) {
-        const form = formRef.current;
-        handeResetValidation(form, defaults);
+        const valid = Object.keys(defaults).length > 0 || inputs.length === 0;
+        handeResetValidation(defaults, {}, valid);
 
-        return () => handeResetValidation(form, defaults);
+        return () => handeResetValidation(defaults, {}, valid);
       }
     },
-    [handeResetValidation, formRef, defaults, useValidation]
+    [handeResetValidation, defaults, useValidation, inputs.length]
   );
 
   return (
     <form
-      ref={formRef}
       name={name}
       className={cx('form', className)}
       onSubmit={handleSubmit}

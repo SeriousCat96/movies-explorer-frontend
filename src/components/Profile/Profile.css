@@ -63,6 +63,10 @@
   position: relative;
 }
 
+.profile__fieldset:last-of-type .profile__label {
+  border: none;
+}
+
 .profile__input {
   margin: 0;
   padding-left: 20%;

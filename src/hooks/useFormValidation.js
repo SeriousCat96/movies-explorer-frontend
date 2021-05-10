@@ -18,10 +18,10 @@ export default function useFormValidation() {
   }
 
   const handeResetValidation = React.useCallback(
-    (form, values={}) => {
+    (values = {}, errors = {}, isValid = false) => {
       setValues(values);
-      setErrors({});
-      setIsValid(form ? form.checkValidity() : false);
+      setErrors(errors);
+      setIsValid(isValid);
     },
     [setValues, setErrors, setIsValid]);
 
