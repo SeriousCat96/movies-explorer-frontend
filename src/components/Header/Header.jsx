@@ -1,6 +1,5 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Link from '../Link/Link.jsx';
-import Button from '../Button/Button.jsx';
 import Navigation from '../Navigation/Navigation.jsx';
 import MenuToggle from '../MenuToggle/MenuToggle.jsx';
 import cx from 'classnames';
@@ -27,10 +26,8 @@ const Header = () => {
             <Link to="/signup" className="header__link">
               Регистрация
             </Link>
-            <Link to="/signin" className="header__link">
-              <Button className="header__button">
-                Войти
-              </Button>
+            <Link to="/signin" className={cx('header__link', 'header__link_type_button')}>
+              Войти
             </Link>
           </Navigation>
         </Route>

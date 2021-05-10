@@ -44,7 +44,7 @@
   opacity: 1;
 }
 
-.button.header__button {
+.header__link.header__link_type_button {
   color: black;
   background-color: #3ddc84;
   font-style: normal;
