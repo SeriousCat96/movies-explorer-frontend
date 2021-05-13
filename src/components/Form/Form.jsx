@@ -69,6 +69,7 @@ function Form({
               value={values[input.name] || ''}
               error={errors[input.name]}
               isInvalid={errors[input.name] !== undefined && errors[input.name] !== ''}
+              pattern={input.pattern}
               onChange={handleChange}
               useValidation={useValidation}
             />
@@ -98,6 +99,7 @@ Form.propTypes = {
     labelClassName: PropTypes.string,
     labelText: PropTypes.string,
     placeholder: PropTypes.string,
+    pattern: PropTypes.instanceOf(RegExp),
     required: PropTypes.bool,
     autoComplete: PropTypes.string,
     minLength: PropTypes.number,

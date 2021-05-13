@@ -1,21 +1,26 @@
+import React from 'react';
 import Header from '../Header/Header.jsx';
 import Main from '../Main/Main.jsx';
 import Form from '../Form/Form.jsx';
 import Button from '../Button/Button.jsx';
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { nameRegex } from '../../utils/constants';
 import cx from 'classnames';
 import './Profile.css';
 
-function Profile() {
-  const inputs = [
+function Profile({ onSubmit, onLogout }) {
+  const { name, email } = React.useContext(CurrentUserContext);
+  const [ inputs ] = React.useState([
     {
       id: 'name',
       name: 'name',
       type: 'name',
       required: true,
+      pattern: nameRegex,
       className: 'profile__input',
       labelClassName: 'profile__label',
       labelText: 'Имя',
-      value: 'Павел',
+      value: name,
     },
     {
       id: 'email',
@@ -25,16 +30,16 @@ function Profile() {
       className: 'profile__input',
       labelClassName: 'profile__label',
       labelText: 'E-mail',
-      value: 'pochta@yandex.ru',
+      value: email,
     },
-  ];
+  ]);
 
   return (
     <>
       <Header />
       <Main>
         <div className={cx('profile', 'app__section')}>
-          <h1 className="profile__title">Привет, Павел!</h1>
+          <h1 className="profile__title">{`Привет, ${name}!`}</h1>
           <Form
             name="profile"
             className="profile__form"
@@ -42,9 +47,10 @@ function Profile() {
             fieldsetClassName="profile__fieldset"
             submitTitle="Редактировать"
             inputs={inputs}
+            onSubmit={onSubmit}
             useValidation
           />
-          <Button className="profile__button">
+          <Button className="profile__button" onClick={onLogout}>
             Выйти из аккаунта
           </Button>
         </div>

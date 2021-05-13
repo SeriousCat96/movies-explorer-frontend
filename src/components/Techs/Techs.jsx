@@ -4,7 +4,7 @@ import './Techs.css';
 
 function Techs() {
   const items = [
-    'HTML', 'CSS', 'JS', 'React', 'Git', 'Express.js', 'mondoDB'
+    'HTML', 'CSS', 'JS', 'React', 'Git', 'Express.js', 'mongoDB'
   ];
 
   return (

@@ -5,7 +5,7 @@ import logo from '../../images/logo.svg';
 import './Auth.css';
 import { Redirect, Route, Switch } from 'react-router';
 
-const Auth = ({ inputs }) => {
+const Auth = ({ inputs, onSubmit }) => {
   return (
     <section className={cx('auth', 'app__section')}>
       <Link to="/" className="auth__link"><img className="auth__logo" src={logo} alt="Лого"/></Link>
@@ -18,6 +18,7 @@ const Auth = ({ inputs }) => {
             submitClassName="auth__submit"
             submitTitle="Зарегистрироваться"
             inputs={inputs}
+            onSubmit={onSubmit}
             useValidation
           />
           <p className="auth__text">
@@ -32,6 +33,7 @@ const Auth = ({ inputs }) => {
             submitClassName="auth__submit"
             submitTitle="Войти"
             inputs={inputs}
+            onSubmit={onSubmit}
             useValidation
           />
           <p className="auth__text">
