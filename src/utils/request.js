@@ -4,10 +4,11 @@
    * @param {string} method Метод запроса.
    * @param {string} headers Заголовки запроса.
    * @param {string} body Тело запроса.
+   * @param {string} credentials Способ отправки учётных данных.
    * @returns {Promise} Результат запроса.
    */
-  export default function sendJson(uri, method, headers, body) {
-    return fetch(uri, { method, headers, body, credentials: 'include' })
+  export default function send(uri, method, headers, body, credentials='include') {
+    return fetch(uri, { method, headers, body, credentials })
       .then(
         (response) => {
           console.debug(`${method} ${uri} status: ${response.status}`);

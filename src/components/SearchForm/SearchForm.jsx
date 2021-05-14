@@ -4,11 +4,11 @@ import Toggle from '../Toggle/Toggle.jsx';
 import cx from 'classnames';
 import './SearchForm.css';
 
-function SearchForm() {
+function SearchForm({onSearch}) {
   const inputs = [
     {
-      id: 'movie',
-      name: 'movie',
+      id: 'query',
+      name: 'query',
       type: 'text',
       placeholder: 'Фильм',
       required: true,
@@ -35,6 +35,7 @@ function SearchForm() {
         submitClassName="search__submit"
         fieldsetClassName="search__fieldset"
         inputs={inputs}
+        onSubmit={onSearch}
         useValidation
       />
     </section>

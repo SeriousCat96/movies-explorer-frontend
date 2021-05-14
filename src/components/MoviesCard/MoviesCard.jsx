@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './MoviesCard.css';
 
-const MoviesCard = ({ nameRU, image, saved, duration }) => {
+const MoviesCard = ({ name, imageUrl, saved, durationString }) => {
   return (
     <article className="card">
-      <img className="card__image" src={image} alt={`Изображение фильма ${nameRU}`}/>
+      <img className="card__image" src={imageUrl} alt={`Изображение фильма ${name}`}/>
       <div className="card__info">
-        <h3 className="card__title">{nameRU}</h3>
+        <h3 className="card__title">{name}</h3>
         <Switch>
           <Route path='/movies'>
             <Button
@@ -25,16 +25,16 @@ const MoviesCard = ({ nameRU, image, saved, duration }) => {
             <Button className={cx('card__button', 'card__button_type_remove')} />
           </Route>
         </Switch>
-        <span className="card__text">{duration}</span>
+        <span className="card__text">{durationString}</span>
       </div>
     </article>
  )
 }
 
 MoviesCard.propTypes = {
-  nameRU: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  duration: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string.isRequired,
+  durationString: PropTypes.string.isRequired,
   saved: PropTypes.bool,
 }
 

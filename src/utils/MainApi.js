@@ -1,5 +1,5 @@
 import { baseUri, headers } from './constants.js';
-import sendJson from './request.js';
+import send from './request.js';
 
 /**
  * Класс для работы с API приложения.
@@ -17,7 +17,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   signIn(userData) {
-    return sendJson(`${this._baseUri}/signin`, 'POST', this._headers, JSON.stringify(userData))
+    return send(`${this._baseUri}/signin`, 'POST', this._headers, JSON.stringify(userData))
       .then((data) => {
         localStorage.setItem('jwt', data.token);
         return Promise.resolve(data);
@@ -31,7 +31,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   signUp(userData) {
-    return sendJson(`${this._baseUri}/signup`, 'POST', this._headers, JSON.stringify(userData));
+    return send(`${this._baseUri}/signup`, 'POST', this._headers, JSON.stringify(userData));
   }
 
   /**
@@ -50,7 +50,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   addMovie(movie) {
-    return sendJson(`${this._baseUri}/movies`, 'POST', this._getHeaders(), JSON.stringify(movie));
+    return send(`${this._baseUri}/movies`, 'POST', this._getHeaders(), JSON.stringify(movie));
   }
 
   /**
@@ -59,7 +59,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   deleteMovie(movieId) {
-    return sendJson(`${this._baseUri}/movies/${movieId}`, 'DELETE', this._getHeaders());
+    return send(`${this._baseUri}/movies/${movieId}`, 'DELETE', this._getHeaders());
   }
 
   /**
@@ -68,7 +68,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   getMovies() {
-    return sendJson(`${this._baseUri}/movies`, 'GET', this._getHeaders());
+    return send(`${this._baseUri}/movies`, 'GET', this._getHeaders());
   }
 
   /**
@@ -87,7 +87,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   getUserInfo() {
-    return sendJson(`${this._baseUri}/users/me`, 'GET', this._getHeaders());
+    return send(`${this._baseUri}/users/me`, 'GET', this._getHeaders());
   }
 
   /**
@@ -96,7 +96,7 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   setUserInfo(userInfo) {
-    return sendJson(`${this._baseUri}/users/me`, 'PATCH', this._getHeaders(), JSON.stringify(userInfo));
+    return send(`${this._baseUri}/users/me`, 'PATCH', this._getHeaders(), JSON.stringify(userInfo));
   }
 
   _getHeaders() {

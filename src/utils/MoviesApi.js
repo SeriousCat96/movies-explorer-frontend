@@ -1,13 +1,13 @@
 import { moviesApiUri, headers } from './constants.js';
-import sendJson from './request.js';
+import send from './request.js';
 
 /**
  * Класс для работы с Movies API.
  */
  export default class MoviesApi {
   constructor({ baseUri, headers }) {
-    this._baseUri = baseUri;
     this._headers = headers;
+    this._baseUri = baseUri;
   }
 
 
@@ -17,8 +17,8 @@ import sendJson from './request.js';
    * @returns {Promise} Результат запроса.
    */
   getMovies() {
-    return sendJson(this._baseUri, 'GET', this._headers);
+    return send(`${this._baseUri}/beatfilm-movies`, 'GET', this._headers, null, 'omit');
   }
 }
 
-export const api = new MoviesApi({ moviesApiUri, headers });
+export const moviesApi = new MoviesApi({ baseUri: moviesApiUri, headers });
