@@ -15,14 +15,15 @@ function Input({
   children,
   labelText,
   pattern,
-  ...props
+  ...rest
 }) {
   return (
+
     <>
       <Label className={labelClassName} htmlFor={id}>
         {labelText}
         <input
-          {...props}
+          {...rest}
           className={cx('input', className)}
           id={id}
           type={type}

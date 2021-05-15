@@ -9,7 +9,7 @@ import Input from '../Input/Input';
 import ValidableInput from '../ValidableInput/ValidableInput';
 import './Form.css';
 
-const FormInput = ({ component: Component, useValidation, ...props }) => (
+const FormInput = ({ component: Component, useValidation,  ...props }) => (
   Component ? (
     <Component {...props} />
   ) : (
@@ -28,7 +28,7 @@ function Form({
   useValidation
 }) {
   const handleSubmit = (evt) => {
-    evt.preventDefault(evt);
+    evt.preventDefault();
     onSubmit(values);
   }
 

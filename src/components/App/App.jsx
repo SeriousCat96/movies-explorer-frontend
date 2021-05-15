@@ -16,9 +16,11 @@ import './App.css';
 
 function App() {
   const [tokenChecked, setTokenChecked] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
   const [movies, setMovies] = React.useState([]);
-  const [currentUser, setCurrentUser] = React.useState();
+  const [query, setQuery] = React.useState('');
+  const [isFeaturette, setIsFeaturette] = React.useState(false);
   const history = useHistory();
 
   function handleLogin(userData) {
@@ -82,13 +84,12 @@ function App() {
           .then((moviesData) => (
             Promise.resolve(
               moviesData
-                .filter((movie) => movie.image)
                 .map((movie) => {
                   return {
                     ...movie,
                     name: movie.nameRU,
                     durationString: getDurationString(movie.duration),
-                    imageUrl: `${moviesApiUri}${movie.image.url}`,
+                    imageUrl: (movie.image && `${moviesApiUri}${movie.image.url}`) || '',
                   };
                 })
           ))
@@ -107,8 +108,11 @@ function App() {
     let queryFilter;
     let items = JSON.parse(localStorage.getItem('movies'));
 
-    if (searchQuery.query) {
-      const queryString = searchQuery.query
+    setQuery(searchQuery.query);
+    setIsFeaturette(searchQuery.featurette);
+
+    if (query) {
+      const queryString = query
         .trim()
         .toLowerCase();
       queryFilter = (item) => item.name
@@ -116,7 +120,7 @@ function App() {
         .toLowerCase()
         .includes(queryString);
     }
-    if (searchQuery.featurette) {
+    if (isFeaturette) {
       featuretteFilter = (item) => item.duration <= 40;
     }
 
@@ -125,6 +129,17 @@ function App() {
       &&
       (queryFilter ? queryFilter(item) : true)
     ));
+  }
+
+  function filter(featurette) {
+    return search({query, featurette});
+  }
+
+  function handleMoviesFilter(featurette) {
+    if (movies.length) {
+      const filtered = filter(featurette);
+      setMovies(filtered);
+    }
   }
 
   function getDurationString(duration) {
@@ -166,7 +181,7 @@ function App() {
               <Register onSubmit={handleRegister} />
             </Route>
             <AuthRoute exact path="/movies">
-              <Movies isLoading={isLoading} onSearch={handleMoviesSearch} movies={movies} />
+              <Movies isLoading={isLoading} onSearch={handleMoviesSearch} onFilter={handleMoviesFilter} movies={movies} />
             </AuthRoute>
             <AuthRoute exact path="/saved-movies">
               <SavedMovies />

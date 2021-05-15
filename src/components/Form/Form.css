@@ -3,11 +3,14 @@
 }
 
 .form__submit {
-  /* width: 100%; */
   font-style: normal;
   font-weight: normal;
-  /* font-size: 18px;
-  line-height: 1.22; */
   border: none;
   margin: 0;
+}
+
+.form__submit.form__submit_disabled {
+  opacity: .5;
+  pointer-events: none;
+  user-select: none;
 }

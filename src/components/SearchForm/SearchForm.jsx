@@ -4,7 +4,7 @@ import Toggle from '../Toggle/Toggle.jsx';
 import cx from 'classnames';
 import './SearchForm.css';
 
-function SearchForm({onSearch}) {
+function SearchForm({ onSearch, onFilter }) {
   const inputs = [
     {
       id: 'query',
@@ -23,6 +23,7 @@ function SearchForm({onSearch}) {
       className: 'search__input',
       labelClassName: 'search__toggle',
       children: 'Короткометражки',
+      onFilter: onFilter,
       component: Toggle
     },
   ];

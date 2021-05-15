@@ -4,12 +4,12 @@ import Main from '../Main/Main.jsx';
 import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 
-const Movies = ({ movies, onSearch, isLoading }) => {
+const Movies = ({ movies, onSearch, onFilter, isLoading }) => {
   return (
     <>
       <Header />
       <Main>
-        <SearchForm onSearch={onSearch} />
+        <SearchForm onSearch={onSearch} onFilter={onFilter} />
         <MoviesCardList isLoading={isLoading} movies={movies}/>
       </Main>
       <Footer />

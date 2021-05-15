@@ -3,7 +3,12 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 import './Toggle.css';
 
-function Toggle({ id, name, className, labelClassName, children, checked, defaultChecked, onChange }) {
+function Toggle({ id, name, className, labelClassName, children, checked, defaultChecked, onChange, onFilter }) {
+  function handleChange(evt) {
+    onFilter(evt.target.checked);
+    onChange(evt);
+  }
+
   return (
     <label className={cx('toggle', labelClassName)} htmlFor={id}>
       <input
@@ -12,7 +17,7 @@ function Toggle({ id, name, className, labelClassName, children, checked, defaul
           type="checkbox"
           className={cx('toggle__switch', className)}
           defaultChecked={defaultChecked || checked}
-          onChange={onChange}
+          onChange={handleChange}
         />
         <span className="toggle__slider"></span>
         <span className="toogle__caption">{children}</span>
