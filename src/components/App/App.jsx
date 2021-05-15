@@ -22,19 +22,42 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
 
-  const featuretteFilter = useFilter('featurette', (item, disabled) => !disabled || item.duration <= 40);
-  const queryFilter = useFilter('query', (item, query) => {
-    const queryString = query
-      .trim()
-      .toLowerCase();
-    return item.name
-      .trim()
-      .toLowerCase()
-      .includes(queryString);
-  });
+  const shortFilmCallback = React.useCallback(
+    (item, value) => !value || item.duration <= 40,
+    []
+  );
+
+  const queryCallback = React.useCallback(
+    (item, value) => {
+      const queryString = value
+        .trim()
+        .toLowerCase();
+      return item.name
+        .trim()
+        .toLowerCase()
+        .includes(queryString);
+    },
+    []
+  );
+
+  const getSavedMovies = React.useCallback(
+    () => {
+      return mainApi
+        .getMovies()
+        .catch(() => 'Failed to get saved movies.');
+    },
+    []
+  );
+
+  const shortFilmFilter = useFilter('shortFilm', shortFilmCallback);
+  const queryFilter = useFilter('queryString', queryCallback);
+
   const [movies, searchMovies] = useSearch(
-    getMoviesRepository,
-    queryFilter, featuretteFilter);
+    getMovies,
+    queryFilter, shortFilmFilter);
+  const [savedMovies, searchSavedMovies] = useSearch(
+    getSavedMovies,
+    queryFilter, shortFilmFilter);
 
   function handleLogin(userData) {
     mainApi
@@ -78,12 +101,55 @@ function App() {
       .catch(() => console.error("Failed to edit profile."))
   }
 
-  function handleMoviesSearch(searchQuery) {
-    searchMovies(searchQuery)
-      .catch((err) => console.log(err));
+  function handleMoviesSearch(query) {
+    setIsLoading(true);
+
+    searchMovies(query)
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }
 
-  function getMoviesRepository() {
+  function handleMoviesFilter(shortFilm) {
+    if (movies && movies.length) {
+      const [, queryString] = queryFilter;
+      handleMoviesSearch({ shortFilm, queryString });
+    }
+  }
+
+  function handleMovieAdd(movie) {
+    mainApi
+      .addMovie(movie)
+      .then(() => {
+        movie.saved = true;
+      })
+      .catch(() => 'Failed to add movie');
+  }
+
+  function handleMovieRemove(movie) {
+    mainApi
+      .deleteMovie(movie._id)
+      .then(() => {
+        movie.saved = false;
+      })
+      .catch(() => 'Failed to delete movie');
+  }
+
+  function handleSavedMoviesSearch(query) {
+    setIsLoading(true);
+
+    searchSavedMovies(query)
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
+  }
+
+  function handleSavedMoviesFilter(shortFilm) {
+    if (savedMovies && savedMovies.length) {
+      const [, queryString] = queryFilter;
+      handleSavedMoviesSearch({ shortFilm, queryString });
+    }
+  }
+
+  function getMovies() {
     const storageMovies = localStorage.getItem('movies');
     return Promise.resolve(
       storageMovies ? (
@@ -96,10 +162,20 @@ function App() {
               moviesData
                 .map((movie) => {
                   return {
-                    ...movie,
+                    movieId: movie.id,
                     name: movie.nameRU,
+                    nameRU: movie.nameRU,
+                    nameEN: movie.nameRU,
+                    director: movie.director,
+                    country: movie.country,
+                    year: movie.year,
+                    duration: movie.duration,
                     durationString: getDurationString(movie.duration),
-                    imageUrl: (movie.image && `${moviesApiUri}${movie.image.url}`) || '',
+                    description: movie.description,
+                    image: (movie.image && `${moviesApiUri}${movie.image.url}`) || '',
+                    trailer: movie.trailerLink,
+                    thumbnail: (movie.image && `${moviesApiUri}${movie.image.formats.thumbnail.url}`) || '',
+                    alt: (movie.image && movie.image.name + movie.image.ext) || `Изображение фильма ${movie.nameRU}`,
                   };
                 })
           ))
@@ -115,12 +191,6 @@ function App() {
 
         return Promise.resolve(moviesData);
       });
-  }
-
-  function handleMoviesFilter(featurette) {
-    if (movies.length) {
-      searchMovies({ featurette });
-    }
   }
 
   function getDurationString(duration) {
@@ -144,9 +214,18 @@ function App() {
 
   React.useEffect(
     () => {
-      getCurrentUser().catch((err) => console.log(err))
+      getCurrentUser()
+        .catch((err) => console.log(err));
     },
     [getCurrentUser]
+  );
+
+  React.useEffect(
+    () => {
+      searchSavedMovies()
+        .catch((err) => console.log(err));
+    },
+    [searchSavedMovies]
   );
 
   return (
@@ -162,10 +241,22 @@ function App() {
               <Register onSubmit={handleRegister} />
             </Route>
             <AuthRoute exact path="/movies">
-              <Movies isLoading={isLoading} onSearch={handleMoviesSearch} onFilter={handleMoviesFilter} movies={movies} />
+              <Movies
+                isLoading={isLoading}
+                onSearch={handleMoviesSearch}
+                onFilter={handleMoviesFilter}
+                onAddMovie={handleMovieAdd}
+                movies={movies}
+              />
             </AuthRoute>
             <AuthRoute exact path="/saved-movies">
-              <SavedMovies />
+              <SavedMovies
+                isLoading={isLoading}
+                onSearch={handleSavedMoviesSearch}
+                onFilter={handleSavedMoviesFilter}
+                onRemoveMovie={handleMovieRemove}
+                movies={savedMovies}
+              />
             </AuthRoute>
             <AuthRoute exact path="/profile">
               <Profile onLogout={handleLogout} onSubmit={handleEditProfile} />

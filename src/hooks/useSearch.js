@@ -3,31 +3,45 @@ import React from 'react';
 /**
  * Выполняет поиск объектов в указанном хранилище.
  *
- * @param {() => Promise<object[]>} getRepo Callback, возвращающий хранилище объектов.
+ * @param {() => Promise<object[]>} getRepoCallback Callback, возвращающий хранилище объектов.
  * @param  {...[name: string, state: any, filter: (item: any, value: any) => boolean]} filters Список фильтров поиска
- * @returns {[object[], (searchQuery: object) => void]} Результаты поиска.
+ * @returns {[object[], (query: object) => void]} Результаты поиска.
  */
-export default function useSearch(getRepo, ...filters) {
-  const [repo, setRepo] = React.useState([]);
-  const [results, setResults] = React.useState([]);
-
+export default function useSearch(getRepoCallback, ...filters) {
+  const [results, setResults] = React.useState(null);
+  const [filterList] = React.useState(filters);
   /**
    * Выполняет поиск объектов в репозитории.
-   * @param {object} searchQuery
+   * @param {object} query Объект запроса.
    */
-  async function search(searchQuery) {
-    setRepo(await getRepo());
+  const search = React.useCallback(
+    (query) => {
+      return getRepoCallback()
+        .then((items) => {
 
-    const items = repo.filter((item) => (
-      filters.reduce((filterResult, currentFilter) => {
-        const [name, state, filter] = currentFilter;
-        const res = filterResult && filter(item, searchQuery[name]);
-        return res;
-      }, true)
-    ));
+          const filteredItems = (
+            query
+            && Object.keys(query).length
+            && items.filter((item) => (
+              filterList.reduce((filterResult, currentFilter) => {
+                const [name,, filter] = currentFilter;
+                let res = true;
 
-    setResults(items);
-  }
+                if(query[name]) {
+                  res = filter(item, query[name]);
+                }
+
+                return filterResult && res;
+              }, true)
+            )))
+            || items;
+
+          setResults(() => filteredItems);
+        })
+        .catch((err) => console.log(err));
+    },
+    [getRepoCallback, filterList]
+  );
 
 
   return [

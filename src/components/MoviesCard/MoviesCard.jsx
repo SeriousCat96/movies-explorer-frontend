@@ -1,45 +1,37 @@
 import Button from '../Button/Button';
 import { Route, Switch } from 'react-router';
-import PropTypes from 'prop-types';
 import cx from 'classnames';
 import './MoviesCard.css';
 
-const MoviesCard = ({ name, imageUrl, saved, durationString }) => {
+const MoviesCard = ({ item, onMovieButtonClick }) => {
   return (
     <article className="card">
-      <img className="card__image" src={imageUrl} alt={`Изображение фильма ${name}`}/>
+      <img className="card__image" src={item.image} alt={item.alt}/>
       <div className="card__info">
-        <h3 className="card__title">{name}</h3>
+        <h3 className="card__title">{item.name}</h3>
         <Switch>
           <Route path='/movies'>
             <Button
+              onClick={onMovieButtonClick.bind(undefined, item)}
               className = {
                 cx('card__button', {
-                  'card__button_type_checked-like' : saved,
-                  'card__button_type_unchecked-like': !saved,
+                  'card__button_type_checked-like' : item.saved,
+                  'card__button_type_unchecked-like': !item.saved,
                 })
               }
             />
           </Route>
           <Route path='/saved-movies'>
-            <Button className={cx('card__button', 'card__button_type_remove')} />
+            <Button
+              onClick={onMovieButtonClick.bind(undefined, item)}
+              className={cx('card__button', 'card__button_type_remove')}
+            />
           </Route>
         </Switch>
-        <span className="card__text">{durationString}</span>
+        <span className="card__text">{item.durationString}</span>
       </div>
     </article>
  )
-}
-
-MoviesCard.propTypes = {
-  name: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string.isRequired,
-  durationString: PropTypes.string.isRequired,
-  saved: PropTypes.bool,
-}
-
-MoviesCard.defaultProps = {
-  saved: false,
 }
 
 export default MoviesCard;

@@ -6,22 +6,26 @@ import Preloader from '../Preloader/Preloader';
 import PropTypes from 'prop-types';
 import './MoviesCardList.css';
 
-const MoviesCardList = ({ movies, isLoading }) => {
+const MoviesCardList = ({ movies, isLoading, onMovieButtonClick }) => {
   return (
     <section className={cx('cards', 'app__section')}>
       {
         !isLoading ? (
-          movies.length ? (
+          movies && movies.length ? (
             <>
               <List className="cards__items">
                 {movies.map(((movie) => (
-                  <MoviesCard key={movie.id} {...movie} />
+                  <MoviesCard
+                    key={movie.movieId}
+                    item={movie}
+                    onMovieButtonClick={onMovieButtonClick}
+                  />
                 )))}
               </List>
               <Button className="cards__load-btn">Ещё</Button>
             </>
           ) : (
-            <p>Ничего не найдено</p>
+            movies && <p>Ничего не найдено</p>
           )
         ) : (
           <Preloader />

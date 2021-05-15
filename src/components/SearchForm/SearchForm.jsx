@@ -7,8 +7,8 @@ import './SearchForm.css';
 function SearchForm({ onSearch, onFilter }) {
   const inputs = [
     {
-      id: 'query',
-      name: 'query',
+      id: 'queryString',
+      name: 'queryString',
       type: 'text',
       placeholder: 'Фильм',
       required: true,
@@ -16,8 +16,8 @@ function SearchForm({ onSearch, onFilter }) {
       labelClassName: 'search__label',
     },
     {
-      id: 'featurette',
-      name: 'featurette',
+      id: 'shortFilm',
+      name: 'shortFilm',
       type: 'checkbox',
       required: false,
       className: 'search__input',
