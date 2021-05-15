@@ -4,6 +4,7 @@ import cx from 'classnames';
 import './MoviesCard.css';
 
 const MoviesCard = ({ item, onMovieButtonClick }) => {
+
   return (
     <article className="card">
       <img className="card__image" src={item.image} alt={item.alt}/>

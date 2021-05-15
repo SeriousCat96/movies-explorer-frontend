@@ -22,35 +22,34 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
 
-  const shortFilmCallback = React.useCallback(
-    (item, value) => !value || item.duration <= 40,
-    []
-  );
-
-  const queryCallback = React.useCallback(
-    (item, value) => {
-      const queryString = value
-        .trim()
-        .toLowerCase();
-      return item.name
-        .trim()
-        .toLowerCase()
-        .includes(queryString);
-    },
-    []
-  );
-
   const getSavedMovies = React.useCallback(
     () => {
       return mainApi
         .getMovies()
+        .then((moviesData) => (
+          Promise.resolve(
+            moviesData
+              .map((movie) => {
+                return {
+                  ...movie,
+                  name: movie.nameRU,
+                  durationString: getDurationString(movie.duration),
+                  alt: `Изображение фильма ${movie.nameRU}`,
+                };
+              })
+        )))
         .catch(() => 'Failed to get saved movies.');
     },
     []
   );
 
-  const shortFilmFilter = useFilter('shortFilm', shortFilmCallback);
-  const queryFilter = useFilter('queryString', queryCallback);
+  const shortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
+  const queryFilter = useFilter('queryString', (item, value) => (
+    item.name
+      .trim()
+      .toLowerCase()
+      .includes(value.trim().toLowerCase())
+  ));
 
   const [movies, searchMovies] = useSearch(
     getMovies,
@@ -117,19 +116,34 @@ function App() {
   }
 
   function handleMovieAdd(movie) {
-    mainApi
-      .addMovie(movie)
+    if(movie.saved) {
+      mainApi
+      .deleteMovie(movie.saved._id)
       .then(() => {
-        movie.saved = true;
+        const [, queryString] = queryFilter;
+        const [, shortFilm] = shortFilmFilter;
+        searchSavedMovies({ queryString, shortFilm });
       })
-      .catch(() => 'Failed to add movie');
+      .catch(() => 'Failed to delete movie');
+    } else {
+      mainApi
+        .addMovie(movie)
+        .then(() => {
+          const [, queryString] = queryFilter;
+          const [, shortFilm] = shortFilmFilter;
+          searchSavedMovies({ queryString, shortFilm });
+        })
+        .catch(() => 'Failed to add movie');
+    }
   }
 
   function handleMovieRemove(movie) {
     mainApi
       .deleteMovie(movie._id)
       .then(() => {
-        movie.saved = false;
+        const [, queryString] = queryFilter;
+        const [, shortFilm] = shortFilmFilter;
+        searchSavedMovies({ queryString, shortFilm });
       })
       .catch(() => 'Failed to delete movie');
   }
@@ -215,17 +229,10 @@ function App() {
   React.useEffect(
     () => {
       getCurrentUser()
+        .then(() => searchSavedMovies())
         .catch((err) => console.log(err));
     },
-    [getCurrentUser]
-  );
-
-  React.useEffect(
-    () => {
-      searchSavedMovies()
-        .catch((err) => console.log(err));
-    },
-    [searchSavedMovies]
+    [getCurrentUser, searchSavedMovies]
   );
 
   return (
@@ -247,6 +254,7 @@ function App() {
                 onFilter={handleMoviesFilter}
                 onAddMovie={handleMovieAdd}
                 movies={movies}
+                savedMovies={savedMovies}
               />
             </AuthRoute>
             <AuthRoute exact path="/saved-movies">
