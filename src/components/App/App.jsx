@@ -8,6 +8,8 @@ import Login from '../Login/Login.jsx';
 import Register from '../Register/Register.jsx';
 import NotFound from '../NotFound/NotFound.jsx';
 import AuthRoute from '../AuthRoute/AuthRoute.jsx';
+import useFilter from '../../hooks/useFilter';
+import useSearch from '../../hooks/useSearch';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/MainApi';
 import { moviesApiUri } from '../../utils/constants';
@@ -18,10 +20,21 @@ function App() {
   const [tokenChecked, setTokenChecked] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
-  const [movies, setMovies] = React.useState([]);
-  const [query, setQuery] = React.useState('');
-  const [isFeaturette, setIsFeaturette] = React.useState(false);
   const history = useHistory();
+
+  const featuretteFilter = useFilter('featurette', (item, disabled) => !disabled || item.duration <= 40);
+  const queryFilter = useFilter('query', (item, query) => {
+    const queryString = query
+      .trim()
+      .toLowerCase();
+    return item.name
+      .trim()
+      .toLowerCase()
+      .includes(queryString);
+  });
+  const [movies, searchMovies] = useSearch(
+    getMoviesRepository,
+    queryFilter, featuretteFilter);
 
   function handleLogin(userData) {
     mainApi
@@ -66,14 +79,11 @@ function App() {
   }
 
   function handleMoviesSearch(searchQuery) {
-    handleSearch(searchQuery)
-      .then((items) => setMovies(items))
+    searchMovies(searchQuery)
       .catch((err) => console.log(err));
   }
 
-  function handleSearch(searchQuery) {
-    setIsLoading(true);
-
+  function getMoviesRepository() {
     const storageMovies = localStorage.getItem('movies');
     return Promise.resolve(
       storageMovies ? (
@@ -97,48 +107,19 @@ function App() {
       )
     )
       .then((moviesData) => {
-        if (!storageMovies) localStorage.setItem('movies', JSON.stringify(moviesData));
-        return Promise.resolve(search(searchQuery));
-      })
-      .finally(() => setIsLoading(false));
-  }
+        if (!storageMovies) {
+          localStorage.setItem('movies', JSON.stringify(moviesData));
+        } else {
+          moviesData = JSON.parse(storageMovies);
+        }
 
-  function search(searchQuery) {
-    let featuretteFilter;
-    let queryFilter;
-    let items = JSON.parse(localStorage.getItem('movies'));
-
-    setQuery(searchQuery.query);
-    setIsFeaturette(searchQuery.featurette);
-
-    if (query) {
-      const queryString = query
-        .trim()
-        .toLowerCase();
-      queryFilter = (item) => item.name
-        .trim()
-        .toLowerCase()
-        .includes(queryString);
-    }
-    if (isFeaturette) {
-      featuretteFilter = (item) => item.duration <= 40;
-    }
-
-    return items.filter((item) => (
-      (featuretteFilter ? featuretteFilter(item) : true)
-      &&
-      (queryFilter ? queryFilter(item) : true)
-    ));
-  }
-
-  function filter(featurette) {
-    return search({query, featurette});
+        return Promise.resolve(moviesData);
+      });
   }
 
   function handleMoviesFilter(featurette) {
     if (movies.length) {
-      const filtered = filter(featurette);
-      setMovies(filtered);
+      searchMovies({ featurette });
     }
   }
 
