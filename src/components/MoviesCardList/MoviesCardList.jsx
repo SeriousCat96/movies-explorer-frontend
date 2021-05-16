@@ -12,7 +12,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
   const [items, setItems] = React.useState([]);
 
   const setCardsLayout = React.useCallback(
-    () => {
+    (onMount) => {
       const width = window.innerWidth;
 
       if (movies) {
@@ -20,21 +20,21 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
           setItems(i => i.length
             ? i.length > movies.length
               ? movies.slice(0, i.length)
-              : movies.slice(0, movies.length)
+              : movies.slice(0, onMount ? movies.length : i.length)
             : movies.slice(0, 12));
           setToLoad(3);
         } else if (width > 480 && width < 1024) {
           setItems(i => i.length
             ? i.length > movies.length
               ? movies.slice(0, i.length)
-              : movies.slice(0, movies.length)
+              : movies.slice(0, onMount ? movies.length : i.length)
             : movies.slice(0, 8));
           setToLoad(2);
         } else {
           setItems(i => i.length
             ? i.length > movies.length
               ? movies.slice(0, i.length)
-              : movies.slice(0, movies.length)
+              : movies.slice(0, onMount ? movies.length : i.length)
             : movies.slice(0, 5))
           setToLoad(2);
         }
@@ -56,7 +56,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
   React.useEffect(
     () => {
       window.addEventListener('resize', handleResize);
-      setCardsLayout();
+      setCardsLayout(true);
 
       return () => {
         window.removeEventListener('resize', handleResize);
