@@ -1,11 +1,17 @@
+import React from 'react';
 import Form from '../Form/Form';
 import Link from '../Link/Link';
+import {CurrentUserContext} from '../../contexts/CurrentUserContext';
 import cx from 'classnames';
 import logo from '../../images/logo.svg';
 import './Auth.css';
 import { Redirect, Route, Switch } from 'react-router';
 
 const Auth = ({ inputs, onSubmit }) => {
+
+  const loggedInUser = React.useContext(CurrentUserContext);
+  if (loggedInUser) return <Redirect to="/movies" />
+
   return (
     <section className={cx('auth', 'app__section')}>
       <Link to="/" className="auth__link"><img className="auth__logo" src={logo} alt="Лого"/></Link>

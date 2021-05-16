@@ -1,3 +1,5 @@
+ import { loadErrorMessage } from './constants'
+
  /**
    * Отправить JSON на сервер.
    * @param {string} uri URL запроса.
@@ -17,6 +19,6 @@
             return response.json();
           }
 
-          return Promise.reject('Ошибка запроса');
+          return Promise.reject(loadErrorMessage);
         });
   }

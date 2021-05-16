@@ -5,7 +5,6 @@ import './MoviesCard.css';
 import Link from '../Link/Link';
 
 const MoviesCard = ({ item, onMovieButtonClick }) => {
-
   return (
     <article className="card">
       <Link to={item.trailer}>
@@ -32,7 +31,7 @@ const MoviesCard = ({ item, onMovieButtonClick }) => {
             />
           </Route>
         </Switch>
-        <span className="card__text">{item.durationString}</span>
+        <time dateTime={item.durationString} className="card__text">{item.duration}</time>
       </div>
     </article>
  )

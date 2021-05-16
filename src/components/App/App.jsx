@@ -8,6 +8,7 @@ import Login from '../Login/Login.jsx';
 import Register from '../Register/Register.jsx';
 import NotFound from '../NotFound/NotFound.jsx';
 import AuthRoute from '../AuthRoute/AuthRoute.jsx';
+import Preloader from '../Preloader/Preloader.jsx';
 import useFilter from '../../hooks/useFilter';
 import useSearch from '../../hooks/useSearch';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
@@ -22,6 +23,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
+  const [loadErrorMessage, setLoadErrorMessage] = React.useState('');
 
   const getSavedMovies = React.useCallback(
     () => {
@@ -59,10 +61,10 @@ function App() {
       .includes(value.trim().toLowerCase())
   ));
 
-  const [movies, searchMovies] = useSearch(
+  const [movies, setMovies, searchMovies] = useSearch(
     getMovies,
     moviesQueryFilter, moviesShortFilmFilter);
-  const [savedMovies, searchSavedMovies] = useSearch(
+  const [savedMovies, setSavedMovies, searchSavedMovies] = useSearch(
     getSavedMovies,
     savedMoviesQueryFilter, savesMoviesShortFilmFilter);
 
@@ -84,6 +86,9 @@ function App() {
       .then(() => {
         setCurrentUser(null);
         localStorage.removeItem('movies');
+        setLoadErrorMessage('');
+        setMovies(null);
+        setSavedMovies(null);
         history.push('/');
       })
       .catch((err) => console.log(err));
@@ -112,7 +117,8 @@ function App() {
     setIsLoading(true);
 
     searchMovies(query)
-      .catch((err) => console.log(err))
+      .then(() => setLoadErrorMessage(''))
+      .catch((err) => setLoadErrorMessage(err))
       .finally(() => setIsLoading(false));
   }
 
@@ -152,7 +158,8 @@ function App() {
     setIsLoading(true);
 
     searchSavedMovies(query)
-      .catch((err) => console.log(err))
+      .then(() => setLoadErrorMessage(''))
+      .catch((err) => setLoadErrorMessage(err))
       .finally(() => setIsLoading(false));
   }
 
@@ -258,7 +265,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       {
-        tokenChecked && (
+        tokenChecked ? (
           <Switch>
             <Route exact path="/" component={About} />
             <Route path="/signin" >
@@ -275,6 +282,7 @@ function App() {
                 onAction={handleMovieAction}
                 movies={movies}
                 savedMovies={savedMovies}
+                errorMessage={loadErrorMessage}
               />
             </AuthRoute>
             <AuthRoute exact path="/saved-movies">
@@ -284,6 +292,7 @@ function App() {
                 onFilter={handleSavedMoviesFilter}
                 onAction={handleSavedMovieAction}
                 movies={savedMovies}
+                errorMessage={loadErrorMessage}
               />
             </AuthRoute>
             <AuthRoute exact path="/profile">
@@ -293,6 +302,8 @@ function App() {
               <NotFound />
             </Route>
           </Switch>
+        ) : (
+          <Preloader />
         )
       }
     </CurrentUserContext.Provider>

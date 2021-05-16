@@ -9,3 +9,5 @@ export const headers = {
 };
 
 export const nameRegex = /[A-Za-zа-яА-ЯёЁ\s-]+/;
+
+export const loadErrorMessage = 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз';

@@ -4,14 +4,14 @@ import Toggle from '../Toggle/Toggle.jsx';
 import cx from 'classnames';
 import './SearchForm.css';
 
-function SearchForm({ onSearch, onFilter }) {
+function SearchForm({ onSearch, onFilter, queryRequired }) {
   const inputs = [
     {
       id: 'queryString',
       name: 'queryString',
       type: 'text',
       placeholder: 'Фильм',
-      required: true,
+      required: queryRequired || false,
       className: 'search__input',
       labelClassName: 'search__label',
     },
@@ -19,7 +19,6 @@ function SearchForm({ onSearch, onFilter }) {
       id: 'shortFilm',
       name: 'shortFilm',
       type: 'checkbox',
-      required: false,
       className: 'search__input',
       labelClassName: 'search__toggle',
       children: 'Короткометражки',

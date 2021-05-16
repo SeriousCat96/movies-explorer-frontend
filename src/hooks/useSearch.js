@@ -5,7 +5,7 @@ import React from 'react';
  *
  * @param {() => Promise<void | object[]>} getStorageCallback Callback, возвращающий хранилище объектов.
  * @param  {...[name: string, state: any, filter: (item: any, value: any) => boolean]} filters Список фильтров поиска
- * @returns {[object[], (query: object) => void]} Результаты поиска.
+ * @returns {[object[], (state: object[]) => void, (query: object) => void]} Результаты поиска.
  */
 export default function useSearch(getStorageCallback, ...filters) {
   const [results, setResults] = React.useState(null);
@@ -47,6 +47,7 @@ export default function useSearch(getStorageCallback, ...filters) {
 
   return [
     results,
+    setResults,
     search,
   ];
 }
