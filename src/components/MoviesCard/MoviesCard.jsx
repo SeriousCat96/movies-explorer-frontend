@@ -2,12 +2,15 @@ import Button from '../Button/Button';
 import { Route, Switch } from 'react-router';
 import cx from 'classnames';
 import './MoviesCard.css';
+import Link from '../Link/Link';
 
 const MoviesCard = ({ item, onMovieButtonClick }) => {
 
   return (
     <article className="card">
-      <img className="card__image" src={item.image} alt={item.alt}/>
+      <Link to={item.trailer}>
+        <img className="card__image" src={item.image} alt={item.alt}/>
+      </Link>
       <div className="card__info">
         <h3 className="card__title">{item.name}</h3>
         <Switch>

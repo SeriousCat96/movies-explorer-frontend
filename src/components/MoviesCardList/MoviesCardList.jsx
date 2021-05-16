@@ -8,29 +8,31 @@ import PropTypes from 'prop-types';
 import './MoviesCardList.css';
 
 const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) => {
-  const [offset, setOffset] = React.useState(0);
-  const [count, setCount] = React.useState(0);
   const [toLoad, setToLoad] = React.useState(0);
+  const [items, setItems] = React.useState([]);
 
   const setCardsLayout = React.useCallback(
     () => {
       const width = window.innerWidth;
 
       if (width > 1024) {
-        setCount(c => c ? c : c + 12);
-        setOffset(o => count ? o : o + 12);
+        movies && setItems(i => i.length
+          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 12)
+          : movies.slice(0, 12));
         setToLoad(3);
       } else if (width > 480 && width < 1024) {
-        setCount(c => c ? c : c + 8);
-        setOffset(o => count ? o : o + 8);
+        movies && setItems(i => i.length
+          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 8)
+          : movies.slice(0, 8))
         setToLoad(2);
       } else {
-        setCount(c => c ? c : c + 5);
-        setOffset(o => count ? o : o + 5);
+        movies && setItems(i => i.length
+          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 5)
+          : movies.slice(0, 5))
         setToLoad(2);
       }
     },
-    [setCount, setOffset, setToLoad, count]
+    [setItems, setToLoad, movies]
   )
 
   const handleResize = React.useCallback(
@@ -39,29 +41,34 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
   );
 
   const onButtonMoreClick = () => {
-    setCount(c => c + toLoad);
-    setOffset(o => o + toLoad);
+    const offset = items.length;
+    setItems(i => [...i, ...movies.slice(offset, offset + toLoad)]);
   }
 
   React.useEffect(
     () => {
       window.addEventListener('resize', handleResize);
+      // setItems(movies || []);
       setCardsLayout();
 
-      return () => window.removeEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+
+        setToLoad(0);
+      }
     },
-    [handleResize, setCardsLayout]
+    [handleResize, setCardsLayout, movies]
   );
 
   return (
     <section className={cx('cards', 'app__section')}>
       {
         !isLoading ? (
-          (movies && movies.length) || !savedMovies ?  (
+          (movies && movies.length) ?  (
             <>
               <List className="cards__items">
                 {
-                  movies.slice(offset, offset + toLoad + 1).map(((movie) => {
+                  items.map(((movie) => {
                     movie.saved = savedMovies && savedMovies.find((m) => m.movieId === movie.movieId);
                     return (
                       <MoviesCard
@@ -74,7 +81,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
                 }
               </List>
               {
-                count < movies.length && <Button className="cards__load-btn" onClick={onButtonMoreClick}>Ещё</Button>
+                items.length < movies.length && <Button className="cards__load-btn" onClick={onButtonMoreClick}>Ещё</Button>
               }
             </>
           ) : (

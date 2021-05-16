@@ -13,6 +13,7 @@ import useSearch from '../../hooks/useSearch';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { mainApi } from '../../utils/MainApi';
 import { moviesApiUri } from '../../utils/constants';
+import { regex as urlRegex } from '../../utils/url';
 import { moviesApi } from '../../utils/MoviesApi';
 import './App.css';
 
@@ -162,6 +163,21 @@ function App() {
       handleSavedMoviesSearch({ shortFilm, queryString });
     }
   }
+  function validateMovie(movie) {
+    return (
+      movie.image &&
+      urlRegex.test(`${moviesApiUri}${movie.image.url}`) &&
+      urlRegex.test(`${moviesApiUri}${movie.image.formats.thumbnail.url}`) &&
+      urlRegex.test(movie.trailerLink) &&
+      movie.id &&
+      movie.nameRU &&
+      movie.nameEN &&
+      movie.duration &&
+      movie.director &&
+      movie.country &&
+      movie.year
+    );
+  }
 
   function getMovies() {
     const storageMovies = localStorage.getItem('movies');
@@ -174,24 +190,29 @@ function App() {
           .then((moviesData) => (
             Promise.resolve(
               moviesData
-                .map((movie) => {
-                  return {
-                    movieId: movie.id,
-                    name: movie.nameRU,
-                    nameRU: movie.nameRU,
-                    nameEN: movie.nameRU,
-                    director: movie.director,
-                    country: movie.country,
-                    year: movie.year,
-                    duration: movie.duration,
-                    durationString: getDurationString(movie.duration),
-                    description: movie.description,
-                    image: (movie.image && `${moviesApiUri}${movie.image.url}`) || '',
-                    trailer: movie.trailerLink,
-                    thumbnail: (movie.image && `${moviesApiUri}${movie.image.formats.thumbnail.url}`) || '',
-                    alt: (movie.image && movie.image.name + movie.image.ext) || `Изображение фильма ${movie.nameRU}`,
-                  };
-                })
+                .reduce((movies, movie) => (
+                  validateMovie(movie) ? ([
+                    ...movies,
+                    {
+                      movieId: movie.id,
+                      name: movie.nameRU,
+                      nameRU: movie.nameRU,
+                      nameEN: movie.nameRU,
+                      director: movie.director,
+                      country: movie.country,
+                      year: movie.year,
+                      duration: movie.duration,
+                      durationString: getDurationString(movie.duration),
+                      description: movie.description,
+                      image: `${moviesApiUri}${movie.image.url}`,
+                      trailer: movie.trailerLink,
+                      thumbnail: `${moviesApiUri}${movie.image.formats.thumbnail.url}`,
+                      alt: movie.image.name + movie.image.ext,
+                    }
+                  ] ) : (
+                    movies
+                  )
+                ), [])
           ))
         )
       )
