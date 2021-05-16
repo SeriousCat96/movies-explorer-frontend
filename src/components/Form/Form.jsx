@@ -25,6 +25,7 @@ function Form({
   submitClassName,
   submitTitle,
   onSubmit,
+  validationMessages,
   useValidation
 }) {
   const handleSubmit = (evt) => {
@@ -38,7 +39,7 @@ function Form({
     isValid,
     handleChange,
     handeResetValidation
-  } = useFormValidation();
+  } = useFormValidation(validationMessages);
 
   const defaults = useFormDefaultValues(inputs);
 
@@ -109,6 +110,7 @@ Form.propTypes = {
   submitClassName: PropTypes.string,
   fieldsetClassName: PropTypes.string,
   submitTitle: PropTypes.string,
+  validationMessages: PropTypes.object,
   useValidation: PropTypes.bool,
 };
 

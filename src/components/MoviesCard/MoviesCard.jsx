@@ -31,7 +31,7 @@ const MoviesCard = ({ item, onMovieButtonClick }) => {
             />
           </Route>
         </Switch>
-        <time dateTime={item.durationString} className="card__text">{item.duration}</time>
+        <time dateTime={item.durationString} className="card__text">{item.durationString}</time>
       </div>
     </article>
  )

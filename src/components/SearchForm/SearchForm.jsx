@@ -27,6 +27,10 @@ function SearchForm({ onSearch, onFilter, queryRequired }) {
     },
   ];
 
+  const validationMessages = {
+    valueMissing: 'Нужно ввести ключевое слово',
+  };
+
   return (
     <section className={cx('search', 'app__section')}>
       <Form
@@ -36,6 +40,7 @@ function SearchForm({ onSearch, onFilter, queryRequired }) {
         fieldsetClassName="search__fieldset"
         inputs={inputs}
         onSubmit={onSearch}
+        validationMessages={validationMessages}
         useValidation
       />
     </section>
