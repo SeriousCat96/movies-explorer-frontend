@@ -44,8 +44,15 @@ function App() {
     []
   );
 
-  const shortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
-  const queryFilter = useFilter('queryString', (item, value) => (
+  const moviesShortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
+  const savesMoviesShortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
+  const moviesQueryFilter = useFilter('queryString', (item, value) => (
+    item.name
+      .trim()
+      .toLowerCase()
+      .includes(value.trim().toLowerCase())
+  ));
+  const savedMoviesQueryFilter = useFilter('queryString', (item, value) => (
     item.name
       .trim()
       .toLowerCase()
@@ -54,10 +61,10 @@ function App() {
 
   const [movies, searchMovies] = useSearch(
     getMovies,
-    queryFilter, shortFilmFilter);
+    moviesQueryFilter, moviesShortFilmFilter);
   const [savedMovies, searchSavedMovies] = useSearch(
     getSavedMovies,
-    queryFilter, shortFilmFilter);
+    savedMoviesQueryFilter, savesMoviesShortFilmFilter);
 
   function handleLogin(userData) {
     mainApi
@@ -111,12 +118,12 @@ function App() {
 
   function handleMoviesFilter(shortFilm) {
     if (movies && movies.length) {
-      const [, queryString] = queryFilter;
+      const [, queryString] = moviesQueryFilter;
       handleMoviesSearch({ shortFilm, queryString });
     }
   }
 
-  function handleMovieAdd(movie) {
+  function handleMovieAction(movie) {
     if(movie.saved) {
       mainApi
       .deleteMovie(movie.saved._id)
@@ -130,12 +137,12 @@ function App() {
     }
   }
 
-  function handleMovieRemove(movie) {
+  function handleSavedMovieAction(movie) {
     mainApi
       .deleteMovie(movie._id)
       .then(() => {
-        const [, queryString] = queryFilter;
-        const [, shortFilm] = shortFilmFilter;
+        const [, queryString] = savedMoviesQueryFilter;
+        const [, shortFilm] = savesMoviesShortFilmFilter;
         searchSavedMovies({ queryString, shortFilm });
       })
       .catch(() => 'Failed to delete movie');
@@ -151,7 +158,7 @@ function App() {
 
   function handleSavedMoviesFilter(shortFilm) {
     if (savedMovies && savedMovies.length) {
-      const [, queryString] = queryFilter;
+      const [, queryString] = savedMoviesQueryFilter;
       handleSavedMoviesSearch({ shortFilm, queryString });
     }
   }
@@ -265,7 +272,7 @@ function App() {
                 isLoading={isLoading}
                 onSearch={handleMoviesSearch}
                 onFilter={handleMoviesFilter}
-                onAddMovie={handleMovieAdd}
+                onAction={handleMovieAction}
                 movies={movies}
                 savedMovies={savedMovies}
               />
@@ -275,7 +282,7 @@ function App() {
                 isLoading={isLoading}
                 onSearch={handleSavedMoviesSearch}
                 onFilter={handleSavedMoviesFilter}
-                onRemoveMovie={handleMovieRemove}
+                onAction={handleSavedMovieAction}
                 movies={savedMovies}
               />
             </AuthRoute>

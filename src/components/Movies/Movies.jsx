@@ -4,7 +4,7 @@ import Main from '../Main/Main.jsx';
 import SearchForm from '../SearchForm/SearchForm.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 
-const Movies = ({ movies, savedMovies, onSearch, onFilter, onAddMovie, isLoading }) => {
+const Movies = ({ movies, savedMovies, onSearch, onFilter, onAction, isLoading }) => {
   return (
     <>
       <Header />
@@ -14,7 +14,7 @@ const Movies = ({ movies, savedMovies, onSearch, onFilter, onAddMovie, isLoading
           isLoading={isLoading}
           movies={movies}
           savedMovies={savedMovies}
-          onMovieButtonClick={onAddMovie}
+          onMovieButtonClick={onAction}
         />
       </Main>
       <Footer />

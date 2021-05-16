@@ -4,7 +4,7 @@ import Footer from '../Footer/Footer.jsx';
 import MoviesCardList from '../MoviesCardList/MoviesCardList.jsx';
 import SearchForm from '../SearchForm/SearchForm.jsx';
 
-const SavedMovies = ({ movies, onSearch, onFilter, onRemoveMovie, isLoading }) => {
+const SavedMovies = ({ movies, onSearch, onFilter, onAction, isLoading }) => {
   return (
     <>
       <Header />
@@ -13,7 +13,7 @@ const SavedMovies = ({ movies, onSearch, onFilter, onRemoveMovie, isLoading }) =
         <MoviesCardList
           isLoading={isLoading}
           movies={movies}
-          onMovieButtonClick={onRemoveMovie} />
+          onMovieButtonClick={onAction} />
       </Main>
       <Footer />
     </>

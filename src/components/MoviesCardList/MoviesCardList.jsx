@@ -15,21 +15,29 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
     () => {
       const width = window.innerWidth;
 
-      if (width >= 1024) {
-        movies && setItems(i => i.length
-          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 12)
-          : movies.slice(0, 12));
-        setToLoad(3);
-      } else if (width > 480 && width < 1024) {
-        movies && setItems(i => i.length
-          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 8)
-          : movies.slice(0, 8))
-        setToLoad(2);
-      } else {
-        movies && setItems(i => i.length
-          ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 5)
-          : movies.slice(0, 5))
-        setToLoad(2);
+      if (movies) {
+        if (width >= 1024) {
+          setItems(i => i.length
+            ? i.length > movies.length
+              ? movies.slice(0, i.length)
+              : movies.slice(0, movies.length)
+            : movies.slice(0, 12));
+          setToLoad(3);
+        } else if (width > 480 && width < 1024) {
+          setItems(i => i.length
+            ? i.length > movies.length
+              ? movies.slice(0, i.length)
+              : movies.slice(0, movies.length)
+            : movies.slice(0, 8));
+          setToLoad(2);
+        } else {
+          setItems(i => i.length
+            ? i.length > movies.length
+              ? movies.slice(0, i.length)
+              : movies.slice(0, movies.length)
+            : movies.slice(0, 5))
+          setToLoad(2);
+        }
       }
     },
     [setItems, setToLoad, movies]
@@ -48,12 +56,11 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
   React.useEffect(
     () => {
       window.addEventListener('resize', handleResize);
-      // setItems(movies || []);
       setCardsLayout();
 
       return () => {
         window.removeEventListener('resize', handleResize);
-
+        setItems([]);
         setToLoad(0);
       }
     },
