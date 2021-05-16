@@ -3,7 +3,7 @@ import React from 'react';
 /**
  * Выполняет поиск объектов в указанном хранилище.
  *
- * @param {() => Promise<object[]>} getStorageCallback Callback, возвращающий хранилище объектов.
+ * @param {() => Promise<void | object[]>} getStorageCallback Callback, возвращающий хранилище объектов.
  * @param  {...[name: string, state: any, filter: (item: any, value: any) => boolean]} filters Список фильтров поиска
  * @returns {[object[], (query: object) => void]} Результаты поиска.
  */
@@ -37,6 +37,7 @@ export default function useSearch(getStorageCallback, ...filters) {
             || items;
 
           setResults(() => filteredItems);
+          return Promise.resolve(filteredItems);
         })
         .catch((err) => console.log(err));
     },

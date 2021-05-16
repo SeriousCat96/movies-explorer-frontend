@@ -15,7 +15,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick }) 
     () => {
       const width = window.innerWidth;
 
-      if (width > 1024) {
+      if (width >= 1024) {
         movies && setItems(i => i.length
           ? i.length > movies.length ? movies.slice(0, i.length) : movies.slice(0, 12)
           : movies.slice(0, 12));

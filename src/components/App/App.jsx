@@ -120,20 +120,12 @@ function App() {
     if(movie.saved) {
       mainApi
       .deleteMovie(movie.saved._id)
-      .then(() => {
-        const [, queryString] = queryFilter;
-        const [, shortFilm] = shortFilmFilter;
-        searchSavedMovies({ queryString, shortFilm });
-      })
+      .then(() => searchSavedMovies())
       .catch(() => 'Failed to delete movie');
     } else {
       mainApi
         .addMovie(movie)
-        .then(() => {
-          const [, queryString] = queryFilter;
-          const [, shortFilm] = shortFilmFilter;
-          searchSavedMovies({ queryString, shortFilm });
-        })
+        .then(() => searchSavedMovies())
         .catch(() => 'Failed to add movie');
     }
   }
