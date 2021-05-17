@@ -12,6 +12,7 @@
 
 .cards__items {
   display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   justify-content: center;
   grid-auto-flow: dense;
   width: 100%;
@@ -37,14 +38,20 @@
   text-align: center;
 }
 
-@media screen and (min-width: 568px) {
+@media screen and (min-width: 480px) {
   .cards__items {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 344px));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 343px));
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .cards__items {
+    grid-template-columns: repeat(auto-fill, minmax(335.5px, 1fr));
   }
 }
 
 @media screen and (min-width: 1024px) {
   .cards__items {
-    grid-template-columns: repeat(auto-fit, minmax(281px, 366px));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }

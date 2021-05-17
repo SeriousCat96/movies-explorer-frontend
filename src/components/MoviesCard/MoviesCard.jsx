@@ -8,7 +8,7 @@ const MoviesCard = ({ item, onMovieButtonClick }) => {
   return (
     <article className="card">
       <Link to={item.trailer}>
-        <img className="card__image" src={item.image} alt={item.alt}/>
+        <img className="card__image" src={item.thumbnail} alt={item.alt}/>
       </Link>
       <div className="card__info">
         <h3 className="card__title">{item.name}</h3>
