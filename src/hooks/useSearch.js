@@ -3,11 +3,11 @@ import React from 'react';
 /**
  * Выполняет поиск объектов в указанном хранилище.
  *
- * @param {() => Promise<void | object[]>} getStorageCallback Callback, возвращающий хранилище объектов.
+ * @param {object | () => Promise<void | object[]>} storage Хранилище объектов.
  * @param  {...[name: string, state: any, filter: (item: any, value: any) => boolean]} filters Список фильтров поиска
  * @returns {[object[], (state: object[]) => void, (query: object) => void]} Результаты поиска.
  */
-export default function useSearch(getStorageCallback, ...filters) {
+export default function useSearch(storage, ...filters) {
   const [results, setResults] = React.useState(null);
   const [filterList] = React.useState(filters);
   /**
@@ -16,32 +16,39 @@ export default function useSearch(getStorageCallback, ...filters) {
    */
   const search = React.useCallback(
     (query) => {
-      return getStorageCallback()
-        .then((items) => {
+      function searhAndFilter(items) {
+        const filteredItems = (
+          query
+          && Object.keys(query).length
+          && items.filter((item) => (
+            filterList.reduce((filterResult, currentFilter) => {
+              const [name,, filter] = currentFilter;
+              let result = true;
 
-          const filteredItems = (
-            query
-            && Object.keys(query).length
-            && items.filter((item) => (
-              filterList.reduce((filterResult, currentFilter) => {
-                const [name,, filter] = currentFilter;
-                let result = true;
+              if(query[name]) {
+                result = filter(item, query[name]);
+              }
 
-                if(query[name]) {
-                  result = filter(item, query[name]);
-                }
+              return filterResult && result;
+            }, true)
+          )))
+          || items;
 
-                return filterResult && result;
-              }, true)
-            )))
-            || items;
+        setResults(filteredItems);
+        return Promise.resolve(filteredItems);
+      }
 
-          setResults(() => filteredItems);
-          return Promise.resolve(filteredItems);
-        })
-        .catch((err) => console.log(err));
+      return typeof storage === 'function'
+        ? (
+          storage()
+            .then((items) => searhAndFilter(items))
+            .catch((err) => console.log(err))
+        ) : (
+          searhAndFilter(storage)
+            .catch((err) => console.log(err))
+        );
     },
-    [getStorageCallback, filterList]
+    [storage, filterList]
   );
 
 

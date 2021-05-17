@@ -19,54 +19,74 @@ import { moviesApi } from '../../utils/MoviesApi';
 import './App.css';
 
 function App() {
+  const MAX_DURATION_SHORT_FILM = 40;
+
   const [tokenChecked, setTokenChecked] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
-  const history = useHistory();
+  const [savedMovies, setSavedMovies] = React.useState(false);
   const [loadErrorMessage, setLoadErrorMessage] = React.useState('');
+
+  const moviesMaxDurationFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= MAX_DURATION_SHORT_FILM);
+  const savesMoviesMaxDurationFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= MAX_DURATION_SHORT_FILM);
+  const moviesNameFilter = useFilter('queryString', (item, value) => (
+    !value || item.name
+      .trim()
+      .toLowerCase()
+      .includes(value.trim().toLowerCase())
+  ));
+  const savedMoviesNameFilter = useFilter('queryString', (item, value) => (
+    !value || item.name
+      .trim()
+      .toLowerCase()
+      .includes(value.trim().toLowerCase())
+  ));
+
+  const [moviesSearchResults, setMoviesSearchResults, searchMovies] = useSearch(
+    getMovies,
+    moviesNameFilter, moviesMaxDurationFilter);
+  const [savedMoviesSearhResults, setSavedMoviesSearhResults, searchSavedMovies] = useSearch(
+    savedMovies,
+    savedMoviesNameFilter, savesMoviesMaxDurationFilter);
+
+  const history = useHistory();
+
+  const createMovie = React.useCallback(
+    (movieData) => {
+      return {
+        ...movieData,
+        name: movieData.nameRU,
+        durationString: getDurationString(movieData.duration),
+        alt: `Изображение фильма ${movieData.nameRU}`,
+      };
+    },
+    []
+  );
 
   const getSavedMovies = React.useCallback(
     () => {
       return mainApi
         .getMovies()
         .then((moviesData) => (
-          Promise.resolve(
-            moviesData
-              .map((movie) => {
-                return {
-                  ...movie,
-                  name: movie.nameRU,
-                  durationString: getDurationString(movie.duration),
-                  alt: `Изображение фильма ${movie.nameRU}`,
-                };
-              })
-        )))
+          Promise.resolve(moviesData.map((movie) => createMovie(movie))))
+        )
         .catch(() => 'Failed to get saved movies.');
+    },
+    [createMovie]
+  );
+
+  const getCurrentUser = React.useCallback(
+    () => {
+      return mainApi
+        .getUserInfo()
+        .then(({name, email}) => {
+          setCurrentUser({name, email});
+        })
+        .catch(() => console.log('Failed to fetch user info'))
+        .finally(() => setTokenChecked(true));
     },
     []
   );
-
-  const moviesShortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
-  const savesMoviesShortFilmFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= 40);
-  const moviesQueryFilter = useFilter('queryString', (item, value) => (
-    item.name
-      .trim()
-      .toLowerCase()
-      .includes(value.trim().toLowerCase())
-  ));
-  const savedMoviesQueryFilter = useFilter('queryString', (item, value) => (
-    item.name
-      .trim()
-      .toLowerCase()
-      .includes(value.trim().toLowerCase())
-  ));
-
-  const [movies, setMovies, searchMovies] = useSearch(
-    getMovies,
-    moviesQueryFilter, moviesShortFilmFilter);
-  const [savedMovies, setSavedMovies, searchSavedMovies] = useSearch(
-    getSavedMovies,
-    savedMoviesQueryFilter, savesMoviesShortFilmFilter);
 
   function handleLogin(userData) {
     mainApi
@@ -86,9 +106,6 @@ function App() {
       .then(() => {
         setCurrentUser(null);
         localStorage.removeItem('movies');
-        setLoadErrorMessage('');
-        setMovies(null);
-        setSavedMovies(null);
         history.push('/');
       })
       .catch((err) => console.log(err));
@@ -123,8 +140,8 @@ function App() {
   }
 
   function handleMoviesFilter(shortFilm) {
-    if (movies && movies.length) {
-      const [, queryString] = moviesQueryFilter;
+    if (moviesSearchResults && moviesSearchResults.length) {
+      const [, queryString] = moviesNameFilter;
       handleMoviesSearch({ shortFilm, queryString });
     }
   }
@@ -133,12 +150,18 @@ function App() {
     if(movie.saved) {
       mainApi
       .deleteMovie(movie.saved._id)
-      .then(() => searchSavedMovies())
+      .then((deletedMovie) => {
+        setSavedMovies((items) => items.filter(i => i._id !== deletedMovie._id));
+        setSavedMoviesSearhResults((items) => items.filter(i => i._id !== deletedMovie._id));
+      })
       .catch(() => 'Failed to delete movie');
     } else {
       mainApi
         .addMovie(movie)
-        .then(() => searchSavedMovies())
+        .then((newMovie) => {
+          setSavedMovies((items) => [...items, createMovie(newMovie)]);
+          setSavedMoviesSearhResults((items) => [...items, createMovie(newMovie)]);
+        })
         .catch(() => 'Failed to add movie');
     }
   }
@@ -146,10 +169,9 @@ function App() {
   function handleSavedMovieAction(movie) {
     mainApi
       .deleteMovie(movie._id)
-      .then(() => {
-        const [, queryString] = savedMoviesQueryFilter;
-        const [, shortFilm] = savesMoviesShortFilmFilter;
-        searchSavedMovies({ queryString, shortFilm });
+      .then((deletedMovie) => {
+        setSavedMovies((items) => items.filter(i => i._id !== deletedMovie._id));
+        setSavedMoviesSearhResults((items) => items.filter(i => i._id !== deletedMovie._id));
       })
       .catch(() => 'Failed to delete movie');
   }
@@ -165,10 +187,11 @@ function App() {
 
   function handleSavedMoviesFilter(shortFilm) {
     if (savedMovies && savedMovies.length) {
-      const [, queryString] = savedMoviesQueryFilter;
+      const [, queryString] = savedMoviesNameFilter;
       handleSavedMoviesSearch({ shortFilm, queryString });
     }
   }
+
   function validateMovie(movie) {
     return (
       movie.image &&
@@ -240,26 +263,39 @@ function App() {
     return hours ? `${hours}ч ${minutes}мин` : `${minutes}мин`;
   }
 
-  const getCurrentUser = React.useCallback(
+  React.useEffect(
     () => {
-      return mainApi
-        .getUserInfo()
-        .then(({name, email}) => {
-          setCurrentUser({name, email});
-        })
-        .catch(() => console.log('Failed to fetch user info'))
-        .finally(() => setTokenChecked(true));
+      getCurrentUser()
+        .catch((err) => console.log(err));
     },
-    []
+    [getCurrentUser]
   );
 
   React.useEffect(
     () => {
-      getCurrentUser()
-        .then(() => searchSavedMovies())
-        .catch((err) => console.log(err));
+      if (!currentUser) {
+        setLoadErrorMessage('');
+        setMoviesSearchResults(null);
+      }
     },
-    [getCurrentUser, searchSavedMovies]
+    [currentUser, setMoviesSearchResults]
+  );
+
+  React.useEffect(
+    () => {
+      if (currentUser) {
+        getSavedMovies()
+          .then((items) => {
+            setSavedMovies(items);
+            setSavedMoviesSearhResults(items);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        setSavedMovies(null);
+        setSavedMoviesSearhResults(null);
+      }
+    },
+    [getSavedMovies, setSavedMoviesSearhResults, currentUser]
   );
 
   return (
@@ -280,7 +316,7 @@ function App() {
                 onSearch={handleMoviesSearch}
                 onFilter={handleMoviesFilter}
                 onAction={handleMovieAction}
-                movies={movies}
+                movies={moviesSearchResults}
                 savedMovies={savedMovies}
                 errorMessage={loadErrorMessage}
               />
@@ -291,7 +327,7 @@ function App() {
                 onSearch={handleSavedMoviesSearch}
                 onFilter={handleSavedMoviesFilter}
                 onAction={handleSavedMovieAction}
-                movies={savedMovies}
+                movies={savedMoviesSearhResults}
                 errorMessage={loadErrorMessage}
               />
             </AuthRoute>

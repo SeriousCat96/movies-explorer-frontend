@@ -60,7 +60,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick, er
     <section className={cx('cards', 'app__section')}>
       {
         !isLoading ? (
-          (movies && movies.length) ?  (
+          movies ? (
             <>
               <List className="cards__items">
                 {
