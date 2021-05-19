@@ -12,11 +12,13 @@ import Preloader from '../Preloader/Preloader.jsx';
 import useFilter from '../../hooks/useFilter';
 import useSearch from '../../hooks/useSearch';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+import { createMovieExt, createMovieDb, validateMovie } from '../../utils/constants';
 import { mainApi } from '../../utils/MainApi';
-import { moviesApiUri } from '../../utils/constants';
-import { regex as urlRegex } from '../../utils/url';
 import { moviesApi } from '../../utils/MoviesApi';
 import './App.css';
+import InfoPopup from '../InfoPopup/InfoPopup.jsx';
+import successImg from '../../images/success.png';
+import failImg from '../../images/fail.png';
 
 function App() {
   const MAX_DURATION_SHORT_FILM = 40;
@@ -26,6 +28,10 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [savedMovies, setSavedMovies] = React.useState(false);
   const [loadErrorMessage, setLoadErrorMessage] = React.useState('');
+  const [isInfoPopupActive, setIsInfoPopupActive] = React.useState(false);
+  const [authImg, setPopupImg] = React.useState(failImg);
+  const [popupTitle, setPopupTitle] = React.useState('');
+  const history = useHistory();
 
   const moviesMaxDurationFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= MAX_DURATION_SHORT_FILM);
   const savesMoviesMaxDurationFilter = useFilter('shortFilm', (item, value) => !value || item.duration <= MAX_DURATION_SHORT_FILM);
@@ -49,31 +55,6 @@ function App() {
     savedMovies,
     savedMoviesNameFilter, savesMoviesMaxDurationFilter);
 
-  const history = useHistory();
-
-  const createMovie = React.useCallback(
-    (movieData) => {
-      return {
-        ...movieData,
-        name: movieData.nameRU,
-        durationString: getDurationString(movieData.duration),
-        alt: `Изображение фильма ${movieData.nameRU}`,
-      };
-    },
-    []
-  );
-
-  const getSavedMovies = React.useCallback(
-    () => {
-      return mainApi
-        .getMovies()
-        .then((moviesData) => (
-          Promise.resolve(moviesData.map((movie) => createMovie(movie))))
-        )
-        .catch(() => 'Failed to get saved movies.');
-    },
-    [createMovie]
-  );
 
   const getCurrentUser = React.useCallback(
     () => {
@@ -88,6 +69,53 @@ function App() {
     []
   );
 
+  const getSavedMovies = React.useCallback(
+    () => {
+      return mainApi
+        .getMovies()
+        .then((moviesData) => (
+          Promise.resolve(moviesData.map((movie) => createMovieDb(movie))))
+        )
+        .catch(() => 'Failed to get saved movies.');
+    },
+    []
+  );
+
+  function getMovies() {
+    const storageMovies = localStorage.getItem('movies');
+    setLoadErrorMessage('');
+
+    return Promise.resolve(
+      storageMovies ? (
+        Promise.resolve(storageMovies)
+      ) : (
+        moviesApi
+          .getMovies()
+          .then((moviesData) => (
+            Promise.resolve(moviesData.reduce((movies, movie) => (
+              validateMovie(movie) ? [...movies, createMovieExt(movie)] : movies
+            ), []))
+          )
+        )
+      )
+    )
+      .then((moviesData) => {
+        if (!storageMovies) {
+          localStorage.setItem('movies', JSON.stringify(moviesData));
+        } else {
+          moviesData = JSON.parse(storageMovies);
+        }
+
+        return Promise.resolve(moviesData);
+      })
+      .catch((err) =>  {
+        setPopupImg(failImg);
+        setPopupTitle(err.message);
+        setIsInfoPopupActive(true);
+        return Promise.reject(err);
+      });
+  }
+
   function handleLogin(userData) {
     mainApi
       .signIn(userData)
@@ -95,9 +123,15 @@ function App() {
         .getUserInfo()
         .then((user) => {
           setCurrentUser(user);
+          setPopupImg(successImg);
+          setPopupTitle('Вы успешно авторизовались!');
         }))
       .then(() => history.push('/movies'))
-      .catch(() => console.log('Failed to login'));
+      .catch((err) => {
+        setPopupImg(failImg);
+        setPopupTitle(err.message);
+      })
+      .finally(() => setIsInfoPopupActive(true));
   }
 
   function handleLogout() {
@@ -118,7 +152,8 @@ function App() {
         const { email, password } = userData;
         handleLogin({ email, password });
       })
-      .catch(err => console.log(err));
+      .catch((err) => setPopupTitle(err.message))
+      .finally(() => setIsInfoPopupActive(true));
   }
 
   function handleEditProfile(userInfo) {
@@ -126,21 +161,25 @@ function App() {
       .setUserInfo(userInfo)
       .then((newUserInfo) => {
         setCurrentUser(newUserInfo);
+        setPopupTitle('Профиль успешно обновлён.');
+        setPopupImg(successImg);
       })
-      .catch(() => console.error("Failed to edit profile."))
+      .catch((err) => {
+        setPopupImg(failImg);
+        setPopupTitle(err.message);
+      })
+      .finally(() => setIsInfoPopupActive(true));
   }
 
   function handleMoviesSearch(query) {
     setIsLoading(true);
 
     searchMovies(query)
-      .then(() => setLoadErrorMessage(''))
-      .catch((err) => setLoadErrorMessage(err))
       .finally(() => setIsLoading(false));
   }
 
   function handleMoviesFilter(shortFilm) {
-    if (moviesSearchResults && moviesSearchResults.length) {
+    if (moviesSearchResults) {
       const [, queryString] = moviesNameFilter;
       handleMoviesSearch({ shortFilm, queryString });
     }
@@ -159,8 +198,8 @@ function App() {
       mainApi
         .addMovie(movie)
         .then((newMovie) => {
-          setSavedMovies((items) => [...items, createMovie(newMovie)]);
-          setSavedMoviesSearhResults((items) => [...items, createMovie(newMovie)]);
+          setSavedMovies((items) => [...items, createMovieDb(newMovie)]);
+          setSavedMoviesSearhResults((items) => [...items, createMovieDb(newMovie)]);
         })
         .catch(() => 'Failed to add movie');
     }
@@ -178,90 +217,37 @@ function App() {
 
   function handleSavedMoviesSearch(query) {
     setIsLoading(true);
-
     searchSavedMovies(query)
-      .then(() => setLoadErrorMessage(''))
-      .catch((err) => setLoadErrorMessage(err))
       .finally(() => setIsLoading(false));
   }
 
   function handleSavedMoviesFilter(shortFilm) {
-    if (savedMovies && savedMovies.length) {
+    if (savedMovies) {
       const [, queryString] = savedMoviesNameFilter;
       handleSavedMoviesSearch({ shortFilm, queryString });
     }
   }
 
-  function validateMovie(movie) {
-    return (
-      movie.image &&
-      urlRegex.test(`${moviesApiUri}${movie.image.url}`) &&
-      urlRegex.test(`${moviesApiUri}${movie.image.formats.thumbnail.url}`) &&
-      urlRegex.test(movie.trailerLink) &&
-      movie.id &&
-      movie.nameRU &&
-      movie.nameEN &&
-      movie.duration &&
-      movie.director &&
-      movie.country &&
-      movie.year
-    );
-  }
+  function handleCloseAllPopups() {
+    setIsInfoPopupActive(false);
+  };
 
-  function getMovies() {
-    const storageMovies = localStorage.getItem('movies');
-    return Promise.resolve(
-      storageMovies ? (
-        Promise.resolve(storageMovies)
-      ) : (
-        moviesApi
-          .getMovies()
-          .then((moviesData) => (
-            Promise.resolve(
-              moviesData
-                .reduce((movies, movie) => (
-                  validateMovie(movie) ? ([
-                    ...movies,
-                    {
-                      movieId: movie.id,
-                      name: movie.nameRU,
-                      nameRU: movie.nameRU,
-                      nameEN: movie.nameRU,
-                      director: movie.director,
-                      country: movie.country,
-                      year: movie.year,
-                      duration: movie.duration,
-                      durationString: getDurationString(movie.duration),
-                      description: movie.description,
-                      image: `${moviesApiUri}${movie.image.url}`,
-                      trailer: movie.trailerLink,
-                      thumbnail: `${moviesApiUri}${movie.image.formats.thumbnail.url}`,
-                      alt: movie.image.name + movie.image.ext,
-                    }
-                  ] ) : (
-                    movies
-                  )
-                ), [])
-          ))
-        )
-      )
-    )
-      .then((moviesData) => {
-        if (!storageMovies) {
-          localStorage.setItem('movies', JSON.stringify(moviesData));
-        } else {
-          moviesData = JSON.parse(storageMovies);
+  React.useEffect(
+    () => {
+      const handleEscKeyPressed = (evt) => {
+        evt.preventDefault();
+
+        if (evt.key === 'Escape') {
+          handleCloseAllPopups();
         }
+      };
 
-        return Promise.resolve(moviesData);
-      });
-  }
+      document.addEventListener('keyup', handleEscKeyPressed);
 
-  function getDurationString(duration) {
-    const hours = ~~(duration  / 60);
-    const minutes = duration % 60;
-    return hours ? `${hours}ч ${minutes}мин` : `${minutes}мин`;
-  }
+      return () => document.removeEventListener('keyup', handleEscKeyPressed);
+    },
+    []
+  );
 
   React.useEffect(
     () => {
@@ -305,7 +291,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={About} />
             <Route path="/signin" >
-              <Login onSubmit={handleLogin}/>
+              <Login onSubmit={handleLogin} />
             </Route>
             <Route path="/signup">
               <Register onSubmit={handleRegister} />
@@ -342,6 +328,12 @@ function App() {
           <Preloader />
         )
       }
+      <InfoPopup
+        onClose={handleCloseAllPopups}
+        isActive={isInfoPopupActive}
+        image={authImg}
+        title={popupTitle}
+      />
     </CurrentUserContext.Provider>
   );
 }

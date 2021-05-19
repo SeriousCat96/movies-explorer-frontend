@@ -1,4 +1,4 @@
- import { loadErrorMessage } from './constants'
+import { loadErrorMessage } from './constants'
 
  /**
    * Отправить JSON на сервер.
@@ -19,6 +19,27 @@
             return response.json();
           }
 
-          return Promise.reject(loadErrorMessage);
-        });
+          const error = new Error();
+          error.status = response.status;
+
+          switch (response.status) {
+            case 401:
+              error.message = 'При авторизации произошла ошибка. Токен не передан или передан не в том формате.';
+              break;
+            case 403:
+                error.message = 'Недостаточно прав для доступа к данному ресурсу.';
+                break;
+            case 404:
+              error.message = 'Страница по указанному маршруту не найдена.';
+              break;
+            default:
+              error.message = 'На сервере произошла ошибка.';
+              break;
+          }
+          throw error;
+        }
+      )
+      .catch(() => {
+        throw new Error(loadErrorMessage);
+      });
   }

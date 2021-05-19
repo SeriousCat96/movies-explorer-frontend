@@ -1,0 +1,50 @@
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, .5);
+  visibility: hidden;
+  opacity: 0;
+  cursor: pointer;
+  transition: visibility .3s, opacity .3s;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.popup.popup_active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup__close-button {
+  width: 58px;
+  height: 58px;
+  border: none;
+  background: url(../../images/close-icon.svg) center / cover no-repeat;
+  position: absolute;
+  right: -47px;
+  top: -47px;
+}
+
+.popup__view {
+  margin: 0;
+  color: white;
+  max-width: 75vw;
+  cursor: default;
+  font-family: 'Inter', 'Verdana', sans-serif;
+  box-sizing: border-box;
+  background: #2f2f2f;
+  position: relative;
+}
+
+@media screen and (max-width: 500px) {
+  .popup__close-button {
+    width: 42px;
+    height: 42px;
+    right: -34px;
+    top: -34px;
+  }
+}

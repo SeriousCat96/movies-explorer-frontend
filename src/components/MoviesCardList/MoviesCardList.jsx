@@ -36,16 +36,12 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick, er
   }
 
   React.useEffect(
-    () => {
-      console.log('set layout');
-      setLayout();
-    },
+    () =>  setLayout(),
     [setLayout]
   );
 
   React.useEffect(
     () => {
-      console.log('set renderedItems');
       movies && setRenderedItems(m => (
         movies.slice(
           0,
@@ -60,7 +56,7 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick, er
     <section className={cx('cards', 'app__section')}>
       {
         !isLoading ? (
-          movies ? (
+          movies && movies.length ? (
             <>
               <List className="cards__items">
                 {

@@ -21,6 +21,15 @@ import send from './request.js';
       .then((data) => {
         localStorage.setItem('jwt', data.token);
         return Promise.resolve(data);
+      })
+      .catch((err) => {
+        if (err.status) {
+          err.message = err.status === 401
+            ? 'Вы ввели неправильный логин или пароль.'
+            : 'При регистрации пользователя произошла ошибка.';
+        }
+
+        throw err;
       });
   }
 
@@ -31,7 +40,16 @@ import send from './request.js';
    * @returns {Promise} Результат запроса.
    */
   signUp(userData) {
-    return send(`${this._baseUri}/signup`, 'POST', this._headers, JSON.stringify(userData));
+    return send(`${this._baseUri}/signup`, 'POST', this._headers, JSON.stringify(userData))
+      .catch((err) => {
+        if (err.status) {
+          err.message = err.status === 409
+            ? 'Пользователь с таким email уже существует.'
+            : 'При регистрации пользователя произошла ошибка.';
+        }
+
+        throw err;
+      });
   }
 
   /**
@@ -96,7 +114,16 @@ import send from './request.js';
    * @returns {Promise} Результат запроса.
    */
   setUserInfo(userInfo) {
-    return send(`${this._baseUri}/users/me`, 'PATCH', this._getHeaders(), JSON.stringify(userInfo));
+    return send(`${this._baseUri}/users/me`, 'PATCH', this._getHeaders(), JSON.stringify(userInfo))
+      .catch((err) => {
+        if (err.status) {
+          err.message = err.status === 409
+            ? 'Пользователь с таким email уже существует.'
+            : 'При обновлении профиля произошла ошибка.';
+        }
+
+        throw err;
+      });
   }
 
   _getHeaders() {

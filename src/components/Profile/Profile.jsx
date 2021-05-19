@@ -10,6 +10,8 @@ import './Profile.css';
 
 function Profile({ onSubmit, onLogout }) {
   const { name, email } = React.useContext(CurrentUserContext);
+  const [ submitDisabled, setSubmitDisabled ] = React.useState(false);
+
   const [ inputs ] = React.useState([
     {
       id: 'name',
@@ -21,6 +23,7 @@ function Profile({ onSubmit, onLogout }) {
       labelClassName: 'profile__label',
       labelText: 'Имя',
       value: name,
+      onChange,
     },
     {
       id: 'email',
@@ -31,8 +34,17 @@ function Profile({ onSubmit, onLogout }) {
       labelClassName: 'profile__label',
       labelText: 'E-mail',
       value: email,
+      onChange,
     },
   ]);
+
+  function onChange(evt) {
+    this.value === evt.target.value ? setSubmitDisabled(true) : setSubmitDisabled(false);
+  }
+
+  function invalidate() {
+    return submitDisabled;
+  }
 
   return (
     <>
@@ -48,6 +60,7 @@ function Profile({ onSubmit, onLogout }) {
             submitTitle="Редактировать"
             inputs={inputs}
             onSubmit={onSubmit}
+            invalidate={invalidate}
             useValidation
           />
           <Button className="profile__button" onClick={onLogout}>
