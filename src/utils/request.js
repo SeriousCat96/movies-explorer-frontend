@@ -39,7 +39,8 @@ import { loadErrorMessage } from './constants'
           throw error;
         }
       )
-      .catch(() => {
+      .catch((err) => {
+        if (err instanceof Error && err.status) throw err;
         throw new Error(loadErrorMessage);
       });
   }

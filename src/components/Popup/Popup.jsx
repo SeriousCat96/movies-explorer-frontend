@@ -4,7 +4,7 @@ import cx from 'classnames';
 import './Popup.css';
 
 function Popup(props) {
-  const { id, children, isActive, className, onClose }=props;
+  const { id, children, isActive, className, viewClassName, onClose }=props;
 
   const handlePopupOverlayMouseDown=(evt) => {
     if (evt.target === evt.currentTarget) {
@@ -14,11 +14,11 @@ function Popup(props) {
 
   return (
     <section
-      className={cx('popup', { 'popup_active': isActive })}
+      className={cx('popup', className, { 'popup_active': isActive })}
       id={ id }
       onMouseDown={handlePopupOverlayMouseDown}
     >
-      <div className={cx(className, 'popup__view')}>
+      <div className={cx(viewClassName, 'popup__view')}>
         <Button
           className="popup__close-button"
           onClick={onClose}

@@ -17,8 +17,6 @@ import { mainApi } from '../../utils/MainApi';
 import { moviesApi } from '../../utils/MoviesApi';
 import './App.css';
 import InfoPopup from '../InfoPopup/InfoPopup.jsx';
-import successImg from '../../images/success.png';
-import failImg from '../../images/fail.png';
 
 function App() {
   const MAX_DURATION_SHORT_FILM = 40;
@@ -29,7 +27,7 @@ function App() {
   const [savedMovies, setSavedMovies] = React.useState(false);
   const [loadErrorMessage, setLoadErrorMessage] = React.useState('');
   const [isInfoPopupActive, setIsInfoPopupActive] = React.useState(false);
-  const [authImg, setPopupImg] = React.useState(failImg);
+  const [popupSuccess, setPopupSuccess] = React.useState(false);
   const [popupTitle, setPopupTitle] = React.useState('');
   const history = useHistory();
 
@@ -109,7 +107,7 @@ function App() {
         return Promise.resolve(moviesData);
       })
       .catch((err) =>  {
-        setPopupImg(failImg);
+        setPopupSuccess(false);
         setPopupTitle(err.message);
         setIsInfoPopupActive(true);
         return Promise.reject(err);
@@ -123,12 +121,12 @@ function App() {
         .getUserInfo()
         .then((user) => {
           setCurrentUser(user);
-          setPopupImg(successImg);
+          setPopupSuccess(true);
           setPopupTitle('Вы успешно авторизовались!');
         }))
       .then(() => history.push('/movies'))
       .catch((err) => {
-        setPopupImg(failImg);
+        setPopupSuccess(false);
         setPopupTitle(err.message);
       })
       .finally(() => setIsInfoPopupActive(true));
@@ -152,7 +150,10 @@ function App() {
         const { email, password } = userData;
         handleLogin({ email, password });
       })
-      .catch((err) => setPopupTitle(err.message))
+      .catch((err) => {
+        setPopupSuccess(false);
+        setPopupTitle(err.message);
+      })
       .finally(() => setIsInfoPopupActive(true));
   }
 
@@ -162,10 +163,10 @@ function App() {
       .then((newUserInfo) => {
         setCurrentUser(newUserInfo);
         setPopupTitle('Профиль успешно обновлён.');
-        setPopupImg(successImg);
+        setPopupSuccess(true);
       })
       .catch((err) => {
-        setPopupImg(failImg);
+        setPopupSuccess(false);
         setPopupTitle(err.message);
       })
       .finally(() => setIsInfoPopupActive(true));
@@ -331,8 +332,9 @@ function App() {
       <InfoPopup
         onClose={handleCloseAllPopups}
         isActive={isInfoPopupActive}
-        image={authImg}
+        success={popupSuccess}
         title={popupTitle}
+        autoCloseMs={7000}
       />
     </CurrentUserContext.Provider>
   );

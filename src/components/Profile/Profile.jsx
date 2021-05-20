@@ -12,7 +12,7 @@ function Profile({ onSubmit, onLogout }) {
   const { name, email } = React.useContext(CurrentUserContext);
   const [ submitDisabled, setSubmitDisabled ] = React.useState(false);
 
-  const [ inputs ] = React.useState([
+  const  [ inputs ] = React.useState([
     {
       id: 'name',
       name: 'name',
@@ -42,9 +42,12 @@ function Profile({ onSubmit, onLogout }) {
     this.value === evt.target.value ? setSubmitDisabled(true) : setSubmitDisabled(false);
   }
 
-  function invalidate() {
-    return submitDisabled;
-  }
+  React.useEffect(
+    () => {
+      setSubmitDisabled(true);
+    },
+    [name, email]
+  );
 
   return (
     <>
@@ -60,7 +63,7 @@ function Profile({ onSubmit, onLogout }) {
             submitTitle="Редактировать"
             inputs={inputs}
             onSubmit={onSubmit}
-            invalidate={invalidate}
+            invalid={submitDisabled}
             useValidation
           />
           <Button className="profile__button" onClick={onLogout}>

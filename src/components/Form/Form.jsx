@@ -26,13 +26,12 @@ function Form({
   submitTitle,
   onSubmit,
   validationMessages,
-  invalidate,
-  customErrorMessage,
+  invalid,
   useValidation
 }) {
   const validation = useFormValidation({validationMessages});
   const defaults = useFormDefaultValues(inputs);
-  const submitDisabled = (!validation.isValid || (invalidate && invalidate())) && useValidation;
+  const submitDisabled = (!validation.isValid || invalid) && useValidation;
 
   function handleSubmit(evt) {
     evt.preventDefault();
