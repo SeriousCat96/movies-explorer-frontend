@@ -10,3 +10,5 @@
 
 
 [Ссылка на макет](https://www.figma.com/file/fWjeZ0PWaZYmmPn2Cb3TDe/Diploma-Copy?node-id=932%3A4421).
+[Ссылка на сайт](https://movies-explorer.jumpingcrab.com/)
+[Ссылка на API](https://api.movies-explorer.jumpingcrab.com/).
