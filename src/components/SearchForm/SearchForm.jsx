@@ -5,6 +5,8 @@ import cx from 'classnames';
 import './SearchForm.css';
 
 function SearchForm({ onSearch, onFilter, queryRequired }) {
+  const isShortFilm = localStorage.getItem('shortFilm') === 'true';
+
   const inputs = [
     {
       id: 'queryString',
@@ -22,6 +24,7 @@ function SearchForm({ onSearch, onFilter, queryRequired }) {
       className: 'search__input',
       labelClassName: 'search__toggle',
       children: 'Короткометражки',
+      defaultChecked: isShortFilm,
       onFilter: onFilter,
       component: Toggle
     },

@@ -12,15 +12,13 @@ import Preloader from '../Preloader/Preloader.jsx';
 import useFilter from '../../hooks/useFilter';
 import useSearch from '../../hooks/useSearch';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { createMovieExt, createMovieDb, validateMovie } from '../../utils/constants';
+import { createMovieExt, createMovieDb, validateMovie, MAX_DURATION_SHORT_FILM } from '../../utils/constants';
 import { mainApi } from '../../utils/MainApi';
 import { moviesApi } from '../../utils/MoviesApi';
 import './App.css';
 import InfoPopup from '../InfoPopup/InfoPopup.jsx';
 
 function App() {
-  const MAX_DURATION_SHORT_FILM = 40;
-
   const [tokenChecked, setTokenChecked] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -176,6 +174,7 @@ function App() {
     setIsLoading(true);
 
     searchMovies(query)
+      .then((items) => localStorage.setItem('moviesFiltered', JSON.stringify(items)))
       .finally(() => setIsLoading(false));
   }
 
@@ -183,6 +182,7 @@ function App() {
     if (moviesSearchResults) {
       const [, queryString] = moviesNameFilter;
       handleMoviesSearch({ shortFilm, queryString });
+      localStorage.setItem('shortFilm', String(shortFilm));
     }
   }
 
@@ -263,6 +263,8 @@ function App() {
       if (!currentUser) {
         setLoadErrorMessage('');
         setMoviesSearchResults(null);
+        localStorage.removeItem('moviesFiltered');
+        localStorage.removeItem('shortFilm');
       }
     },
     [currentUser, setMoviesSearchResults]
@@ -271,6 +273,11 @@ function App() {
   React.useEffect(
     () => {
       if (currentUser) {
+        const filteredMoviesStored = localStorage.getItem('moviesFiltered');
+        if (filteredMoviesStored) {
+          setMoviesSearchResults(JSON.parse(filteredMoviesStored));
+        }
+
         getSavedMovies()
           .then((items) => {
             setSavedMovies(items);
@@ -282,7 +289,7 @@ function App() {
         setSavedMoviesSearhResults(null);
       }
     },
-    [getSavedMovies, setSavedMoviesSearhResults, currentUser]
+    [getSavedMovies, setMoviesSearchResults, setSavedMoviesSearhResults, currentUser]
   );
 
   return (

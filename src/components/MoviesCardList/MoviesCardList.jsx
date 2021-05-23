@@ -5,6 +5,14 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Button from '../Button/Button';
 import Preloader from '../Preloader/Preloader';
 import useWindowSize from '../../hooks/useWindowSize';
+import {
+  RENDERED_ITEMS_COUNT_1024,
+  RENDERED_ITEMS_COUNT_768,
+  RENDERED_ITEMS_COUNT_320,
+  TO_LOAD_ITEMS_COUNT_1024,
+  TO_LOAD_ITEMS_COUNT_768,
+  TO_LOAD_ITEMS_COUNT_320
+} from '../../utils/constants';
 import PropTypes from 'prop-types';
 import './MoviesCardList.css';
 
@@ -18,14 +26,14 @@ const MoviesCardList = ({ movies, savedMovies, isLoading, onMovieButtonClick, er
   const setLayout = React.useCallback(
     () => {
       if (windowSize.width >= 1024) {
-        setRenderedItemsCount(12);
-        setToLoadItemsCount(3);
+        setRenderedItemsCount(RENDERED_ITEMS_COUNT_1024);
+        setToLoadItemsCount(TO_LOAD_ITEMS_COUNT_1024);
       } else if (windowSize.width > 568 && windowSize.width < 1024) {
-        setRenderedItemsCount(8);
-        setToLoadItemsCount(2);
+        setRenderedItemsCount(RENDERED_ITEMS_COUNT_768);
+        setToLoadItemsCount(TO_LOAD_ITEMS_COUNT_768);
       } else {
-        setRenderedItemsCount(5);
-        setToLoadItemsCount(2);
+        setRenderedItemsCount(RENDERED_ITEMS_COUNT_320);
+        setToLoadItemsCount(TO_LOAD_ITEMS_COUNT_320);
       }
     },
     [windowSize.width]
