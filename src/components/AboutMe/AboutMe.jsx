@@ -20,8 +20,8 @@ function AboutMe() {
         </p>
 
         <Navigation itemsClassName="about-me__nav">
-          <Link to="https://vk.com/serious_cat" className="about-me__link">ВКонтакте</Link>
-          <Link to="https://github.com/SeriousCat96" className="about-me__link">Github</Link>
+          <Link to="https://vk.com/serious_cat" className="about-me__link" key="vk">ВКонтакте</Link>
+          <Link to="https://github.com/SeriousCat96" className="about-me__link" key="gh">Github</Link>
         </Navigation>
       </article>
       <img className="about-me__photo" src={photo} alt="Фото" />

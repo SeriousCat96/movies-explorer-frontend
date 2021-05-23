@@ -28,16 +28,16 @@ const Header = () => {
             <>
               <MenuToggle id="menu" />
               <Navigation className="header__nav" itemsClassName="header__nav-items">
-                <Link exact to="/" className="header__link" activeClassName="header__nav-item_active">
+                <Link exact to="/" className="header__link" activeClassName="header__nav-item_active" key="main">
                   Главная
                 </Link>
-                <Link to="/movies" className="header__link" activeClassName="header__nav-item_active">
+                <Link to="/movies" className="header__link" activeClassName="header__nav-item_active" key="movies">
                   Фильмы
                 </Link>
-                <Link to="/saved-movies" className="header__link" activeClassName="header__nav-item_active">
+                <Link to="/saved-movies" className="header__link" activeClassName="header__nav-item_active" key="saved">
                   Сохранённые фильмы
                 </Link>
-                <Link to="/profile" className="header__link" activeClassName="header__nav-item_active">
+                <Link to="/profile" className="header__link" activeClassName="header__nav-item_active" key="account">
                   <Account />
                 </Link>
               </Navigation>
@@ -45,10 +45,10 @@ const Header = () => {
             </>
           ) : (
             <Navigation className="header__nav" itemsClassName="header__nav-items">
-              <Link to="/signup" className="header__link">
+              <Link to="/signup" className="header__link" key="signup">
                 Регистрация
               </Link>
-              <Link to="/signin" className={cx('header__link', 'header__link_type_button')}>
+              <Link to="/signin" className={cx('header__link', 'header__link_type_button')} key="signin">
                 Войти
               </Link>
             </Navigation>
