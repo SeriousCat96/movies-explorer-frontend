@@ -4,28 +4,35 @@ import Toggle from '../Toggle/Toggle.jsx';
 import cx from 'classnames';
 import './SearchForm.css';
 
-function SearchForm() {
+function SearchForm({ onSearch, onFilter, queryRequired }) {
+  const isShortFilm = localStorage.getItem('shortFilm') === 'true';
+
   const inputs = [
     {
-      id: 'movie',
-      name: 'movie',
+      id: 'queryString',
+      name: 'queryString',
       type: 'text',
       placeholder: 'Фильм',
-      required: true,
+      required: queryRequired || false,
       className: 'search__input',
       labelClassName: 'search__label',
     },
     {
-      id: 'featurette',
-      name: 'featurette',
+      id: 'shortFilm',
+      name: 'shortFilm',
       type: 'checkbox',
-      required: false,
       className: 'search__input',
       labelClassName: 'search__toggle',
       children: 'Короткометражки',
+      defaultChecked: isShortFilm,
+      onFilter: onFilter,
       component: Toggle
     },
   ];
+
+  const validationMessages = {
+    valueMissing: 'Нужно ввести ключевое слово',
+  };
 
   return (
     <section className={cx('search', 'app__section')}>
@@ -35,6 +42,8 @@ function SearchForm() {
         submitClassName="search__submit"
         fieldsetClassName="search__fieldset"
         inputs={inputs}
+        onSubmit={onSearch}
+        validationMessages={validationMessages}
         useValidation
       />
     </section>

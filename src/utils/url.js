@@ -1,6 +1,6 @@
-export const regex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)$/;
+import { urlRegex } from './constants';
 
-export const isURL = (link) => regex.test(link);
+export const isURL = (link) => urlRegex.test(link);
 
 export const isRoute = (link) => link.startsWith('/');
 

@@ -9,7 +9,7 @@ import Input from '../Input/Input';
 import ValidableInput from '../ValidableInput/ValidableInput';
 import './Form.css';
 
-const FormInput = ({ component: Component, useValidation, ...props }) => (
+const FormInput = ({ component: Component, useValidation,  ...props }) => (
   Component ? (
     <Component {...props} />
   ) : (
@@ -25,33 +25,30 @@ function Form({
   submitClassName,
   submitTitle,
   onSubmit,
+  validationMessages,
+  invalid,
   useValidation
 }) {
-  const handleSubmit = (evt) => {
-    evt.preventDefault(evt);
-    onSubmit(values);
-  }
-
-  const {
-    values,
-    errors,
-    isValid,
-    handleChange,
-    handeResetValidation
-  } = useFormValidation();
-
+  const validation = useFormValidation({validationMessages});
   const defaults = useFormDefaultValues(inputs);
+  const submitDisabled = (!validation.isValid || invalid) && useValidation;
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onSubmit(validation.values);
+  }
 
   React.useEffect(
     () => {
       if (useValidation) {
-        const valid = Object.keys(defaults).length > 0 || inputs.length === 0;
-        handeResetValidation(defaults, {}, valid);
+        const reset = validation.handeResetValidation;
 
-        return () => handeResetValidation(defaults, {}, valid);
+        reset(defaults, {});
+
+        return () => reset(defaults, {});
       }
     },
-    [handeResetValidation, defaults, useValidation, inputs.length]
+    [validation.handeResetValidation, defaults, useValidation, inputs.length]
   );
 
   return (
@@ -66,10 +63,16 @@ function Form({
           <Fieldset key={input.id} className={fieldsetClassName}>
             <FormInput
               {...input}
-              value={values[input.name] || ''}
-              error={errors[input.name]}
-              isInvalid={errors[input.name] !== undefined && errors[input.name] !== ''}
-              onChange={handleChange}
+              value={validation.values[input.name] || ''}
+              error={validation.errors[input.name]}
+              isInvalid={validation.errors[input.name] !== undefined && validation.errors[input.name] !== ''}
+              pattern={input.pattern}
+              onChange={
+                (e) => {
+                  validation.handleChange(e);
+                  input.onChange && input.onChange(e);
+                }
+              }
               useValidation={useValidation}
             />
           </Fieldset>
@@ -77,8 +80,8 @@ function Form({
       )}
       <Button
         type="submit"
-        className={cx('form__submit', submitClassName, { 'form__submit_disabled' :  !isValid && useValidation})}
-        disabled={!isValid && useValidation}
+        className={cx('form__submit', submitClassName, { 'form__submit_disabled' : submitDisabled}) }
+        disabled={submitDisabled}
       >
         {submitTitle}
       </Button>
@@ -98,15 +101,18 @@ Form.propTypes = {
     labelClassName: PropTypes.string,
     labelText: PropTypes.string,
     placeholder: PropTypes.string,
+    pattern: PropTypes.instanceOf(RegExp),
     required: PropTypes.bool,
     autoComplete: PropTypes.string,
     minLength: PropTypes.number,
     maxLength: PropTypes.number,
+    onChange: PropTypes.func,
   })),
   className: PropTypes.string,
   submitClassName: PropTypes.string,
   fieldsetClassName: PropTypes.string,
   submitTitle: PropTypes.string,
+  validationMessages: PropTypes.object,
   useValidation: PropTypes.bool,
 };
 

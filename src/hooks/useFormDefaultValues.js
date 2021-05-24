@@ -1,8 +1,7 @@
 import React from 'react';
 
 export default function useFormDefaultValues(inputs) {
-  const values = {};
-  Object.assign(values, ...inputs
+  const values = Object.assign({}, ...inputs
     .filter((input) => input.value !== undefined || input.defaultChecked !== undefined)
     .map(
       (input) => {

@@ -3,8 +3,8 @@ import cx from 'classnames';
 import './List.css';
 
 function List({ className, itemClassName, children, isOrdered }) {
-  const items = children.map((item, i) => (
-    <li key={new Date().getTime() + i} className={cx('list__item', itemClassName)} >
+  const items = children.map((item) => (
+    <li key={item.key || item.props.id} className={cx('list__item', itemClassName)} >
       {item}
     </li>
   ));

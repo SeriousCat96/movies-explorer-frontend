@@ -14,19 +14,22 @@ function Input({
   defaultChecked,
   children,
   labelText,
-  ...props
+  pattern,
+  ...rest
 }) {
   return (
+
     <>
       <Label className={labelClassName} htmlFor={id}>
         {labelText}
         <input
+          {...rest}
           className={cx('input', className)}
           id={id}
           type={type}
           value={value}
           defaultChecked={defaultChecked || checked}
-          {...props}
+          pattern={pattern && pattern.source}
         />
       </Label>
       {children}
@@ -52,6 +55,7 @@ Input.propTypes = {
   labelClassName: PropTypes.string,
   labelText: PropTypes.string,
   placeholder: PropTypes.string,
+  pattern: PropTypes.instanceOf(RegExp),
   minLength: PropTypes.number,
   maxLength: PropTypes.number,
   required: PropTypes.bool,

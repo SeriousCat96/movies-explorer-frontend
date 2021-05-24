@@ -1,6 +1,7 @@
 import Auth from '../Auth/Auth.jsx';
+import PropTypes from 'prop-types';
 
-function Login() {
+const Login = ({ onSubmit }) => {
   const inputs = [
     {
       id: 'email',
@@ -16,6 +17,7 @@ function Login() {
       name: 'password',
       type: 'password',
       required: true,
+      minLength: 6,
       className: 'auth__input',
       labelClassName: 'auth__label',
       labelText: 'Пароль',
@@ -23,11 +25,12 @@ function Login() {
   ];
 
   return (
-    <>
-      <Auth inputs={inputs}/>
-    </>
-
+    <Auth inputs={inputs} onSubmit={onSubmit}/>
   );
+}
+
+Login.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 }
 
 export default Login;

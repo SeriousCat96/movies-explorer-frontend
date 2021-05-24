@@ -21,13 +21,13 @@ const Portfolio = () => {
     <section className={cx('portfolio', 'app__section')}>
       <h2 className="portfolio__title">Портфолио</h2>
       <Navigation className="portfolio__nav" itemsClassName="portfolio__links">
-        <Link to="https://github.com/SeriousCat96/how-to-learn" className="portfolio__link">
+        <Link to="https://github.com/SeriousCat96/how-to-learn" className="portfolio__link" key="static">
           <PortfolioLink text="Статичный сайт"/>
         </Link>
-        <Link to="https://github.com/SeriousCat96/russian-travel" className="portfolio__link">
+        <Link to="https://github.com/SeriousCat96/russian-travel" className="portfolio__link" key="adaptive">
           <PortfolioLink text="Адаптивный сайт"/>
         </Link>
-        <Link to="https://github.com/SeriousCat96/react-mesto-api-full" className="portfolio__link">
+        <Link to="https://github.com/SeriousCat96/react-mesto-api-full" className="portfolio__link" key="spa">
           <PortfolioLink text="Одностраничное приложение"/>
         </Link>
       </Navigation>
